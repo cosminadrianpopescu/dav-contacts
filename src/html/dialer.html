@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="row1">
+    <dav-history (notify)="view._historyEv($event)" [hidden]="view._number"></dav-history>
+    <dav-contacts-list #contactsList (notify)="view._contactsEv($event)" [hidden]="!view._number" [filter]="view._number"></dav-contacts-list>
+  </div>
+  <div class="row2" *ngIf="view._displayDialpad">
+    <dav-dialpad (numberChanged)="view._numberChanged($event)" #dialpad (dial)="view._dial($event)"></dav-dialpad>
+  </div>
+</div>

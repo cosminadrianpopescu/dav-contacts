@@ -1,0 +1,9 @@
+<mat-grid-list cols="2" rowHeight="19%">
+  <mat-grid-tile dav-contact-click [who]="contact" [style.background-color]="contact | contactColor" *ngFor="let contact of view._items">
+    <div class="wrapper">
+      <img [src]="contact | contactPhoto" *ngIf="contact | contactPhoto" />
+      <div class="row1" *ngIf="!(contact | contactPhoto)">{{contact | contactInitials}}</div>
+      <div [ngClass]="(contact | contactPhoto) ? 'row3' : 'row2'">{{contact | contactName}}</div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

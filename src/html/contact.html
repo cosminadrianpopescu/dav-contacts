@@ -1,0 +1,17 @@
+<mat-menu #menu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <button mat-menu-item (click)="view._edit($event)">View contact details</button>
+    <button *ngIf="view._showCall" mat-menu-item (click)="view._call($event)">Call directly</button>
+  </ng-template>
+</mat-menu>
+<mat-card class="content" dav-contact-click [who]="contact">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <dav-avatar [contact]="contact"></dav-avatar>
+    </div>
+    <mat-card-title [innerHTML]="contact | contactName | highlightedName | async | asHtml"></mat-card-title>
+    <mat-card-subtitle>{{contact | contactPhone}}</mat-card-subtitle>
+    <mat-icon *ngIf="view._showFav" [ngClass]="{fav: (contact | isFavorite)}" (click)="view._fav($event)">{{(contact | isFavorite) ? 'star' : 'star_outline'}}</mat-icon>
+    <button mat-icon-button (click)="view._preventClick($event)" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+  </mat-card-header>
+</mat-card>

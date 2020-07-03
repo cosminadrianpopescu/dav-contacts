@@ -1,0 +1,31 @@
+<div class="main-content">
+  <mat-sidenav-container>
+    <mat-sidenav mode="over" [disableClose]="false" #drawer class="drawer sidenav" position="end">
+      <mat-list>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: '', icon: 'home', label: 'Home'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'settings', icon: 'settings', label: 'Settings'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'history', icon: 'history', label: 'History and call log'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'dial', icon: 'dialpad', label: 'Dialpad'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'details/new', icon: 'person_add', label: 'Add a new contact'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'sync', icon: 'sync', label: 'Synchronize contacts'}}"></ng-container>
+      </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <dav-toolbar (notify)="view._toolbar($event)"></dav-toolbar>
+      <div class="mat-typography content mat-app-background basic-container">
+        <div class="flex-wrapper">
+          <div class="page-content">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+<ng-template #nav let-context>
+  <mat-list-item (click)="view._nav(context.link)">
+    <mat-icon mat-list-icon>{{context.icon}}</mat-icon>
+    <div mat-line>{{context.label}}</div>
+  </mat-list-item>
+</ng-template>

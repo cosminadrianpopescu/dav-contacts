@@ -1,0 +1,10 @@
+dav-checkbox-group {
+  section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mat-checkbox-inner-container {
+    margin: 0px 8px 0px 8px !important;
+  }
+}

@@ -1,0 +1,14 @@
+<ng-container *ngIf="readOnly; then ro else edit"></ng-container>
+<ng-template #edit>
+  <mat-form-field>
+    <mat-label>{{view._label}}</mat-label>
+    <input matInput [(ngModel)]="metadata.value"/>
+  </mat-form-field>
+</ng-template>
+<ng-template #ro>
+  <div class="wrapper">
+    <mat-label class="label">{{view._label}}</mat-label>
+    <mat-label class="value">{{metadata.value}}</mat-label>
+  </div>
+</ng-template>
+

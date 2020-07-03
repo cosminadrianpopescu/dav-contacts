@@ -1,0 +1,21 @@
+<mat-list>
+  <mat-menu #menu="matMenu">
+    <ng-template matMenuContent let-item="item">
+      <button mat-menu-item (click)="view._notify('edit', item)">Edit</button>
+      <span [hidden]="!item.showSave"><button mat-menu-item (click)="view._notify('save', item)">Save as new contact</button></span>
+    </ng-template>
+  </mat-menu>
+  <cdk-virtual-scroll-viewport itemSize="40">
+    <mat-list-item [ngClass]="{local: item.isLocal}" *cdkVirtualFor="let item of view._items">
+      <button mat-icon-button [matMenuTriggerData]="{item: item}" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+      <mat-icon [who]="item | filteringCallableItem" dav-contact-click="call" (click)="view._notify('call', item)" mat-list-icon>local_phone</mat-icon>
+      <div mat-line dav-contact-click [who]="item | filteringCallableItem">{{item.line1}}</div>
+      <div mat-line [innerHTML]="item.line2" dav-contact-click [who]="item | filteringCallableItem"></div>
+    </mat-list-item>
+  </cdk-virtual-scroll-viewport>
+  <span [hidden]="view._items.length">
+    <mat-list-item>
+      <dav mat-line>There are no items to show</dav>
+    </mat-list-item>
+  </span>
+</mat-list>

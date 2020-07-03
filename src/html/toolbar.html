@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span class="left">
+    <span class="back-button" (click)="view._back()" [hidden]="!view._inSearch"><mat-icon>arrow_back</mat-icon></span>
+    <span [hidden]="view._inSearch">{{'title' | routeData | async}}</span>
+    <span [hidden]="!view._inSearch">
+      <mat-form-field>
+        <input #natInput #input type="text" matInput [(ngModel)]="view._term"/>
+      </mat-form-field>
+    </span>
+  </span>
+  <span class="fill"></span>
+  <span class="buttons">
+    <span [hidden]="!view._withSearch"><mat-icon (click)="view._search()">search</mat-icon></span>
+    <mat-icon (click)="view._menu()">menu</mat-icon>
+  </span>
+</mat-toolbar>

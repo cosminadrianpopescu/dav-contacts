@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "dav-contacts",
+  "appId": "dav.contacts",
+  "appName": "Dav Contacts",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

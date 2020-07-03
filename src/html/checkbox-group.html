@@ -1,0 +1,7 @@
+<label>{{label}}</label>
+<section>
+  <mat-checkbox
+    *ngFor="let option of options"
+    [ngModel]="option | isChecked:model"
+    (ngModelChange)="view._change(option, $event)">{{option.value}}</mat-checkbox>
+</section>

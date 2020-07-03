@@ -1,0 +1,27 @@
+.container {
+  height: calc(100% - 56px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: fixed;
+  top: 56px;
+  left: 0px;
+  margin: 8px;
+}
+
+.row1 {
+  display: flex;
+  height: 30%;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.row2 {
+  display: flex;
+  height: 70%;
+  flex: 1 1 auto;
+}
+
+dav-dialpad, dav-history, dav-contacts-list {
+  width: 100%;
+}

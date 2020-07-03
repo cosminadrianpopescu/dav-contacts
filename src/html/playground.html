@@ -1,0 +1,8 @@
+<div class="content">
+  <div>
+    <button mat-button (click)="view._model()">Check model</button>
+  </div>
+  <div>
+    <dav-checkbox-group label="Test checkbox group" [options]="[{key: 'op1', value: 'Option 1'}, {key: 'op2', value: 'Option 2'}, {key: 'op3', value: 'Option 3'}]" [(model)]="view._checkbox"></dav-checkbox-group>
+  </div>
+</div>

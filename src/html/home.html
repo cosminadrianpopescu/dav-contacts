@@ -1,0 +1,44 @@
+<mat-tab-group
+  [ngClass]="{'no-header': view._onlyOneTab}"
+  [selectedIndex]="view._selectedTab"
+  [disablePagination]="true"
+  *ngIf="view._loaded"
+  #bar
+  (selectedTabChange)="view._tab($event)"
+  (swipe)="view._swipe($event, bar)"
+  dav-swipe
+>
+  <mat-tab *ngIf="view._tabs[0]">
+    <ng-template mat-tab-label><mat-icon>star_outline</mat-icon></ng-template>
+    <ng-template matTabContent><dav-tiles></dav-tiles></ng-template>
+  </mat-tab>
+  <mat-tab *ngIf="view._tabs[1]">
+    <ng-template mat-tab-label><mat-icon>person</mat-icon></ng-template>
+    <ng-template matTabContent>
+      <cdk-virtual-scroll-viewport itemSize="86">
+        <dav-contact *cdkVirtualFor="let contact of (view._book?.contacts | filteredContacts | async); templateCacheSize: 0" [contact]="contact"></dav-contact>
+      </cdk-virtual-scroll-viewport>
+    </ng-template>
+  </mat-tab>
+  <mat-tab *ngIf="view._tabs[2]">
+    <ng-template mat-tab-label><mat-icon>group</mat-icon></ng-template>
+    <ng-template matTabContent>
+      <mat-accordion class="accordion">
+        <mat-expansion-panel *ngFor="let tag of view._tags">
+          <mat-expansion-panel-header><mat-panel-title>{{tag}}</mat-panel-title></mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <dav-contact *ngFor="let contact of (tag | contactsForTag:view._sync | filteredContacts | async)" [contact]="contact"></dav-contact>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<div class="fab-wrapper">
+  <div class="fab-middle">
+    <button (click)="view._dial()" mat-fab color="primary"><mat-icon>dialpad</mat-icon></button>
+  </div>
+  <div class="fab-right">
+    <button (click)="view._add()" mat-fab color="primary"><mat-icon>add</mat-icon></button>
+  </div>
+</div>

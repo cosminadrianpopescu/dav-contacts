@@ -1,0 +1,56 @@
+<mat-list class="content">
+  <mat-list-item class="readonly" *ngIf="!view._isNew">
+    <dav-single-binary [readOnly]="view._readOnly" [contact]="view._contact" vcardId="PHOTO"></dav-single-binary>
+    <mat-icon class="ro-icon" dav-contact-click="call" [who]="view._contact">call</mat-icon>
+    <span [hidden]="!view._readOnly"><mat-icon class="ro-icon" (click)="view._edit()">create</mat-icon></span>
+    <span [hidden]="view._readOnly"><mat-icon color="warn" class="ro-icon" (click)="view._cancel()">clear</mat-icon></span>
+    <span [hidden]="view._readOnly"><mat-icon color="primary" class="ro-icon" (click)="view._save()">check</mat-icon></span>
+    <span [hidden]="!view._readOnly"><mat-icon color="primary" class="ro-icon" (click)="view._delete()">delete</mat-icon></span>
+  </mat-list-item>
+
+  <mat-list-item *ngFor="let field of view._fields">
+    <dav-structured [vcardId]="field.vcardId" *ngIf="field.type == 'structured'" [contact]="view._contact" [readOnly]="view._readOnly"></dav-structured>
+    <dav-multiple-text
+      [readOnly]="view._readOnly"
+      [contact]="view._contact"
+      [vcardId]="field.vcardId"
+      *ngIf="field.type == 'multiple-text'"></dav-multiple-text>
+    <dav-groups
+      [readOnly]="view._readOnly"
+      [contact]="view._contact"
+      [vcardId]="field.vcardId"
+      *ngIf="field.vcardId == 'CATEGORIES'"></dav-groups>
+    <dav-structured-multiple
+      *ngIf="field.type == 'structured-multiple'"
+      [readOnly]="view._readOnly"
+      [contact]="view._contact"
+      [vcardId]="field.vcardId"></dav-structured-multiple>
+    <dav-single-input
+      *ngIf="field.type == 'single-input'"
+      [readOnly]="view._readOnly"
+      [contact]="view._contact"
+      [vcardId]="field.vcardId"></dav-single-input>
+    <dav-single-choice
+      *ngIf="field.type == 'single-choice'"
+      [readOnly]="view._readOnly"
+      [contact]="view._contact"
+      [vcardId]="field.vcardId"></dav-single-choice>
+  </mat-list-item>
+
+  <mat-list-item *ngIf="!view._readOnly">
+    <button mat-raised-button color="warn" (click)="view._cancel()">Cancel</button>
+    <button class="second" mat-raised-button color="primary" (click)="view._save()">Save</button>
+  </mat-list-item>
+</mat-list>
+
+<ng-template #confirm let-data>
+  <mat-list>
+    <mat-list-item>
+      <mat-label>Are you sure you want to delete the contact</mat-label>
+    </mat-list-item>
+    <mat-list-item>
+      <button (click)="view._doDelete(data.ref)" mat-button>Sure</button>
+      <button (click)="data.ref.close()" mat-button>Not quite</button>
+    </mat-list-item>
+  </mat-list>
+</ng-template>

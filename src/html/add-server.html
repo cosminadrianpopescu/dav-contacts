@@ -1,0 +1,21 @@
+<mat-form-field appearance="standard">
+  <mat-label>URL</mat-label>
+  <input matInput [(ngModel)]="view._model.url" />
+</mat-form-field>
+<mat-form-field appearance="standard">
+  <mat-label>User</mat-label>
+  <input matInput [(ngModel)]="view._model.user" />
+</mat-form-field>
+<mat-form-field appearance="standard">
+  <mat-label>Password</mat-label>
+  <input matInput type="password" [(ngModel)]="view._model.pass" />
+</mat-form-field>
+<mat-form-field appearance="standard">
+  <mat-label>Synchronization</mat-label>
+  <select matNativeControl [(ngModel)]="view._model.sync.type">
+    <option *ngFor="let option of view._options" [value]="option.key">{{option.value}}</option>
+  </select>
+</mat-form-field>
+<div class="button">
+  <button (click)="view._add()" mat-raised-button color="primary">Add</button>
+</div>

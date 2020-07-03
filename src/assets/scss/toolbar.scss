@@ -1,0 +1,31 @@
+.fill {
+  flex: 1 1 auto;
+}
+
+.left {
+  width: 100%;
+}
+
+input, mat-label {
+  font-size: 16px;
+}
+
+.back-button {
+  position: relative;
+  top: 8px;
+}
+
+mat-form-field {
+  margin-left: 10px;
+  width: calc(100% - 20px);
+  position: relative;
+  top: 2px;
+}
+
+mat-icon {
+  padding-top: 10px;
+}
+
+.buttons mat-icon {
+  padding-left: 20px;
+}

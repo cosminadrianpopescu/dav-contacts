@@ -1,0 +1,4 @@
+<label id="pick-label">Pick a number:</label>
+<mat-label-group aria-labeled-by="pick-label" class="group">
+  <mat-radio-button (click)="view._select(number)" class="button" *ngFor="let number of view._numbers" [value]="number">{{number}}</mat-radio-button>
+</mat-label-group>

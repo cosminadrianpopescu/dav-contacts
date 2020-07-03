@@ -1,0 +1,34 @@
+<mat-list>
+  <mat-list-item class="wrapper">
+    <label id="click-action">Click action (what happens when you click a contact)</label>
+    <mat-radio-group name="click-action" aria-labelledby="click-action" class="radio-group" [(ngModel)]="view._model.action">
+      <mat-radio-button value="call">Call contact</mat-radio-button>
+      <mat-radio-button value="edit">Edit contact</mat-radio-button>
+      <mat-radio-button value="view">View contact details</mat-radio-button>
+    </mat-radio-group>
+  </mat-list-item>
+  <mat-list-item class="wrapper">
+    <label id="call-type">Intent to trigger when calling a contact</label>
+    <mat-radio-group name="call-type" aria-labelledby="call-type" class="radio-group" [(ngModel)]="view._model.intent">
+      <mat-radio-button value="CALL">Call intent</mat-radio-button>
+      <mat-radio-button value="DIAL">Dial intent</mat-radio-button>
+    </mat-radio-group>
+  </mat-list-item>
+  <mat-list-item>
+    <mat-slide-toggle [(ngModel)]="view._model.showFav">Use custom favourites</mat-slide-toggle>
+  </mat-list-item>
+  <mat-list-item class="wrapper">
+    <label id="default-tab">Default selected tab</label>
+    <mat-radio-group aria-labelledby="default-tab" class="radio-group" [(ngModel)]="view._model.defaultTab">
+      <mat-radio-button value="0">Favourites</mat-radio-button>
+      <mat-radio-button value="1">Contacts list</mat-radio-button>
+      <mat-radio-button value="2">Tags</mat-radio-button>
+    </mat-radio-group>
+  </mat-list-item>
+  <mat-list-item class="wrapper">
+    <dav-checkbox-group label="Visible tabs" [options]="view._tabsOptions" [(model)]="view._model.visibleTabs"></dav-checkbox-group>
+  </mat-list-item>
+  <mat-list-item class="wrapper">
+    <dav-checkbox-group label="Visible fields" [options]="view._fieldsOptions" [(model)]="view._model.visibleFields"></dav-checkbox-group>
+  </mat-list-item>
+</mat-list>

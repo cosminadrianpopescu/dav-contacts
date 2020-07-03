@@ -1,0 +1,180 @@
+<span *ngIf="view._selector == 'dav-single-choice'">
+  <ng-container [ngTemplateOutlet]="readOnly ? ro : edit" [ngTemplateOutletContext]="{$implicit: {value: (view.metadata | optionValue:view.metadata?.value)}}"></ng-container>
+  <ng-template #edit>
+    <ng-container *ngIf="view.metadata?.options.length > 2; then editSelect else editRadio"></ng-container>
+  </ng-template>
+</span>
+
+<span *ngIf="view._selector == 'dav-single-input'">
+  <ng-container *ngIf="readOnly; then ro else editInput"></ng-container>
+</span>
+
+<span *ngIf="view._selector == 'dav-groups'">
+  <ng-container *ngIf="readOnly; then ro else editChips"></ng-container>
+</span>
+
+<span *ngIf="view._selector == 'dav-multiple-text'">
+  <ng-container [ngTemplateOutlet]="readOnly ? roMultiple : editMultiple" [ngTemplateOutletContext]="{$implicit: view.metadata?.values}"></ng-container>
+</span>
+
+<span *ngIf="view._selector == 'dav-structured'">
+  <ng-container [ngTemplateOutlet]="readOnly ? roMultiple : editStructured" [ngTemplateOutletContext]="{$implicit: view.metadata?.value}"></ng-container>
+</span>
+
+<span *ngIf="view._selector == 'dav-structured-multiple'">
+  <ng-container [ngTemplateOutlet]="readOnly ? roStructuredMultiple : editStructuredMultiple"></ng-container>
+</span>
+
+<span *ngIf="view._selector == 'dav-single-binary'">
+  <ng-container [ngTemplateOutlet]="binary"></ng-container>
+</span>
+
+<ng-template #confirm let-value>
+  <mat-form-field class="max-width">
+    <mat-label>Please choose:</mat-label>
+    <input matInput [(ngModel)]="view._newType" />
+  </mat-form-field>
+  <button (click)="view._doAdd(value)" mat-button class="max-width">OK</button>
+</ng-template>
+
+<ng-template #photoAction>
+  <mat-radio-group style="flex-direction: column; display: flex">
+    <mat-radio-button class="radio" (click)="view._choose()" [value]="false" style="margin-bottom: 10px;">Choose photo</mat-radio-button>
+    <mat-radio-button class="radio" (click)="view._remove()" [value]="false">Remove photo</mat-radio-button>
+  </mat-radio-group>
+</ng-template>
+
+<ng-template #editMultiple>
+  <mat-form-field *ngIf="view.metadata?.values.length == 0" class="add-button">
+    <mat-label>{{view.metadata?.label}}</mat-label>
+    <button (click)="view._add()" mat-mini-fab color="primary">+</button>
+    <input matInput type="text" disabled/>
+  </mat-form-field>
+  <span *ngFor="let value of view.metadata?.values; let i = index" class="flex" [ngClass]="{first: i == 0, last: i == view.metadata?.values.length - 1}">
+    <button mat-mini-fab class="button" *ngIf="i == 0" (click)="view._add()" color="primary">+</button>
+    <ng-container [ngTemplateOutlet]="typesSelect" [ngTemplateOutletContext]="{$implicit: {value: value, text: i == 0 ? view.metadata?.label : null}}"></ng-container>
+    <mat-form-field class="field-right">
+      <input matInput [type]="inputType || 'text'" [ngModel]="view.metadata?.values[i].value" (ngModelChange)="view.metadata.values[i].value = $event"/>
+    </mat-form-field>
+  </span>
+</ng-template>
+
+<ng-template #typesSelect let-context>
+  <mat-form-field class="field-left">
+    <select matNativeControl [ngModel]="context.value.type" (ngModelChange)="view._changeType($event, context.value)" [placeholder]="context.text">
+      <option *ngFor="let t of view.types" [selected]="t == context.value" [value]="t">{{t}}</option>
+    </select>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #editChips>
+  <mat-form-field>
+    <mat-chip-list #tags>
+      <mat-chip
+        *ngFor="let tag of (contact | contactTags:view._sync)"
+        [removable]="true" [selectable]="false" (removed)="view._removed(tag)">
+        {{tag}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input #input
+                  (blur)="view._add()"
+                  placeholder="Tags"
+                  [matChipInputFor]="tags"
+                  [matChipInputSeparatorKeyCodes]="view._keys"
+                  (matChipInputTokenEnd)="view._add()"/>
+    </mat-chip-list>
+  </mat-form-field>
+</ng-template>
+<ng-template #editInput>
+  <mat-form-field>
+    <mat-label>{{view.metadata?.label}}</mat-label>
+    <input matInput [type]="inputType || 'text'" [(ngModel)]="view.metadata.value"/>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #editRadio>
+  <mat-form-field floatLabel="always">
+    <mat-label [id]="view._uid">{{view.metadata?.label}}</mat-label>
+    <input matInput style="display: none" type="text"/>
+    <mat-radio-group [(ngModel)]="view.metadata.value">
+      <mat-radio-button [checked]="b.key == view.metadata?.value" *ngFor="let b of view.metadata?.options" [value]="b.key">{{b.label}}</mat-radio-button>
+    </mat-radio-group>
+  </mat-form-field>
+</ng-template>
+<ng-template #editSelect>
+  <mat-form-field>
+    <mat-label>{{view.metadata?.label}}</mat-label>
+    <select matNativeControl [(ngModel)]="view.metadata.value">
+      <option *ngFor="let b of view.metadata?.options" [selected]="b.key == view.metadata?.value" [value]="b.key">{{b.label}}</option>
+    </select>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #editStructuredMultiple>
+  <mat-chip (click)="view._add()" color="primary" selected>Add {{view.metadata?.label}}</mat-chip>
+  <table class="structured-multiple">
+    <tr *ngFor="let value of view.metadata?.values">
+      <td>
+        <ng-container [ngTemplateOutlet]="typesSelect" [ngTemplateOutletContext]="{$implicit: {value: value, text: view.metadata?.label + ' type'}}"></ng-container>
+        <ng-container [ngTemplateOutlet]="editStructured" [ngTemplateOutletContext]="{$implicit: value.value}"></ng-container>
+      </td>
+    </tr>
+  </table>
+</ng-template>
+
+<ng-template #editStructured let-values>
+  <div class="structured">
+    <table class="structured">
+      <tr *ngFor="let value of values; let i = index">
+        <td>
+          <mat-form-field class="full-width">
+            <mat-label>{{value.label}}</mat-label>
+            <input matInput [type]="inputType || 'text'"[(ngModel)]="value.value"/>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </div>
+</ng-template>
+
+<ng-template #roStructuredMultiple>
+  <mat-label *ngIf="view.metadata?.values.length == 0">{{view.metadata?.label}}</mat-label>
+  <div class="wrapper roMultiple" *ngFor="let value of view.metadata?.values">
+    <div class="label">
+      <mat-label>{{view.metadata?.label}} {{value.type || ''}}</mat-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="roMultipleValues" [ngTemplateOutletContext]="{$implicit: value.value}"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #roMultiple let-values>
+  <div class="wrapper roMultiple">
+    <div class="label">
+      <mat-label>{{view.metadata?.label}}</mat-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="roMultipleValues" [ngTemplateOutletContext]="{$implicit: values}"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #roMultipleValues let-values>
+  <div style="width: 70%">
+    <mat-grid-list cols="1" rowHeight="20px">
+      <mat-grid-tile *ngFor="let value of values | displayableValues">
+        <span *ngIf="(value.label || value.type) && values.length > 1">{{value.label || value.type}}:&nbsp;</span>
+        <span>{{value.value}}</span>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</ng-template>
+
+<ng-template #ro let-context>
+  <div class="wrapper">
+    <mat-label class="label">{{view.metadata?.label}}</mat-label>
+    <mat-label class="value">{{context?.value || view.metadata?.value}}</mat-label>
+  </div>
+</ng-template>
+
+<ng-template #binary>
+  <dav-avatar (click)="view._click()" [contact]="contact" [doubleSize]="true"></dav-avatar>
+  <input #file type="file" style="display: none"/>
+</ng-template>

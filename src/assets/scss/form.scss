@@ -1,0 +1,141 @@
+dav-multiple-text, dav-single-input, dav-groups, dav-single-choice, dav-structured, dav-structured-multiple, dav-single-binary {
+  .full-width {
+    width: 100%;
+  }
+  
+  .radio {
+    margin: 5px;
+  }
+
+  table {
+    border: none;
+    padding: 0;
+    width: 100%;
+    margin: 0;
+    border-spacing: 0;
+  }
+
+  td {
+    min-height: 55px;
+    height: 55px;
+  }
+
+  mat-form-field {
+    width: calc(100% - 4px);
+  }
+
+  .wrapper {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gray;
+  }
+
+  .label {
+    width: 30%;
+  }
+
+  .value {
+    display: flex;
+    justify-content: flex-start;
+    width: 70%;
+  }
+
+  mat-radio-group {
+    display: flex;
+  }
+
+  mat-radio-button ~ mat-radio-button{
+    margin-left: 16px;
+  }
+
+  .flex {
+    display: flex;
+    position: relative;
+  }
+
+  .flex:not(.first) .mat-form-field-infix {
+    border-top: none;
+  }
+
+  .flex:not(.last) .mat-form-field-wrapper {
+    padding-bottom: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    background-clip: padding-box;
+  }
+
+  .flex:not(.last) .mat-form-field-underline {
+    background-color: transparent;
+  }
+
+  .flex:not(.last):not(.first) .mat-focused .mat-form-field-underline {
+    top: 26px;
+  }
+
+  .flex.first .mat-focused .mat-form-field-underline {
+    top: 45px;
+  }
+
+  .field-left {
+    width: 30%;
+  }
+
+  .field-right {
+    margin-left: 10px;
+  }
+
+  .add {
+    button {
+      width: 25px;
+      height: 25px;
+      position: relative;
+      top: 2px;
+      right: -15px;
+    }
+
+    .mat-button-wrapper {
+      position: relative;
+      top: -8px;
+    }
+  }
+
+  .add-button, .flex {
+    button {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      z-index: 20;
+      top: -19px;
+      right: 10px;
+    }
+
+    button.button {
+      top: -4px;
+      right: 15px;
+    }
+
+    .mat-button-wrapper {
+      position: relative;
+      top: -12px;
+    }
+  }
+
+  .roMultiple {
+    figure {
+      justify-content: flex-start !important;
+    }
+  }
+
+  .structured, .structured-multiple {
+    mat-form-field {
+      width: 100%;
+      height: 40px;
+    }
+
+    margin-bottom: 10px;
+  }
+}
+
+.max-width {
+  width: 100%;
+}

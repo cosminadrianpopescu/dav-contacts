@@ -1,0 +1,47 @@
+span.color-circle {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+span.text {
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  position: relative;
+  top: 10px;
+}
+
+.color-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+}
+
+.double {
+  span.text {
+    width: 80px;
+    font-size: 40px;
+    height: 80px;
+    top: 28px;
+  }
+
+  .color-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  img {
+    width: 80px;
+    height: 80px;
+  }
+}
