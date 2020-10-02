@@ -4,7 +4,7 @@ $app-primary: mat-palette($mat-light-blue);
 
 dav-contacts-list, dav-history {
   mat-list {
-    height: 100%;
+    height: calc(100% - 8px);
   }
   cdk-virtual-scroll-viewport {
     height: 100%;

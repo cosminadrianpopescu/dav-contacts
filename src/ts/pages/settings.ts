@@ -35,6 +35,7 @@ export class Settings extends BaseComponent {
     {key: 'TEL', value: 'Phones'},
     {key: 'CATEGORIES', value: 'Tags'},
     {key: 'EMAIL', value: 'Email'},
+    {key: 'X-CUSTOM-INTENT', value: 'Contact call intent'},
     {key: 'FN', value: 'Full name'},
     {key: 'BDAY', value: 'Birth day'},
     {key: 'NICKNAME', value: 'Nickname'},

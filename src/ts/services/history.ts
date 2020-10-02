@@ -61,6 +61,9 @@ export class History extends BaseClass {
 
   public async add(number: string, contact?: Contact, d?: Date) {
     let uid: string
+    if (!number && !contact) {
+      return ;
+    }
     if (!contact) {
       const contacts = this._dav.contactsByNumber(number);
       if (contacts.length == 1) {
@@ -69,6 +72,10 @@ export class History extends BaseClass {
     }
     if (contact) {
       uid = this._dav.contactId(contact);
+    }
+
+    if (!number && this._dav.contactPhones(contact).length == 0) {
+      return;
     }
 
     const h = new CallHistory();

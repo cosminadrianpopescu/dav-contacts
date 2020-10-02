@@ -6,7 +6,7 @@ import {BaseClass} from '../base';
 import {AddressBookConverter, VCardConverter} from '../convertors';
 import {NgInject} from '../decorators';
 import {VCardMetadata, VCardStructuredProperty, VCardParser} from '../lib/src';
-import {AddressBook, CATEGORIES, Contact, FAV_TAG, FilteringResult, ModelFactory, Server, TEL} from '../models';
+import {AddressBook, CATEGORIES, Contact, FAV_TAG, FilteringResult, ModelFactory, Server, TEL, CallType} from '../models';
 import {Store} from './store';
 
 @Injectable()
@@ -203,12 +203,21 @@ export class Dav extends BaseClass {
   }
 
   public contactPhones(c: Contact): Array<string> {
+    if (!c) {
+      return [];
+    }
     const m = c.metadata.find(m => m.vcardId == 'TEL');
     if (!m) {
       return [];
     }
 
     return m.values.map(v => v.value as string);
+  }
+
+  public getContactIntent(c: Contact): CallType {
+    const m = c.metadata.find(m => m.vcardId == 'X-CUSTOM-INTENT');
+
+    return m ? m.value as CallType : null;
   }
 
   public contactNumberByNumber(c: Contact, number: string): Array<string> {

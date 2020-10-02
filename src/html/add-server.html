@@ -1,21 +1,13 @@
 <mat-form-field appearance="standard">
-  <mat-label>URL</mat-label>
-  <input matInput [(ngModel)]="view._model.url" />
-</mat-form-field>
-<mat-form-field appearance="standard">
-  <mat-label>User</mat-label>
-  <input matInput [(ngModel)]="view._model.user" />
-</mat-form-field>
-<mat-form-field appearance="standard">
-  <mat-label>Password</mat-label>
-  <input matInput type="password" [(ngModel)]="view._model.pass" />
+  <mat-label>Nextcloud URL</mat-label>
+  <input matInput [ngModel]="view._model?.url" (ngModelChange)="view._model.url = $event"/>
 </mat-form-field>
 <mat-form-field appearance="standard">
   <mat-label>Synchronization</mat-label>
-  <select matNativeControl [(ngModel)]="view._model.sync.type">
+  <select matNativeControl [ngModel]="view._model?.sync?.type" (ngModelChange)="view._model.sync.type = $event">
     <option *ngFor="let option of view._options" [value]="option.key">{{option.value}}</option>
   </select>
 </mat-form-field>
 <div class="button">
-  <button (click)="view._add()" mat-raised-button color="primary">Add</button>
+  <button (click)="view._add()" mat-raised-button color="primary">Login</button>
 </div>

@@ -21,6 +21,9 @@ export class ContactClick extends BaseComponent {
   protected async _onClick(ev: MouseEvent) {
     ev.stopPropagation();
     ev.preventDefault();
+    if (!this.who) {
+      return ;
+    }
     let type = this.type
     if (!type) {
       type = await this._store.getAction();

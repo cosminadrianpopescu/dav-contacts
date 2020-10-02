@@ -1,6 +1,6 @@
 import { BaseClass } from '../base';
 import {Injectable, EventEmitter} from '@angular/core';
-import {CallLog as CallLogModel, FilteringEvent, Contact, History, to, NumberDialed} from '../models';
+import {CallLog as CallLogModel, FilteringEvent, Contact, History, to, NumberDialed, CallType} from '../models';
 import {NgInject} from '../decorators';
 import {Dav} from './dav';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
@@ -63,8 +63,8 @@ export class Dialer extends BaseClass {
     return true;
   }
 
-  private async _dialAndroid(number: string) {
-    const intent = await this._store.getCallType();
+  private async _dialAndroid(number: string, contactIntent?: CallType) {
+    const intent = contactIntent || await this._store.getCallType();
     if (intent == 'CALL') {
       const permissions = await this._permission();
       if (!permissions) {
@@ -92,17 +92,20 @@ export class Dialer extends BaseClass {
   }
 
   public async dial(who: string | Contact): Promise<any>{
+    console.log('dialing', who);
     const start = new Date();
+    let intent: CallType = null;
     let number: string;
     if (who instanceof Contact) {
       number = await this.getNumber(who);
+      intent = this._dav.getContactIntent(who);
     }
     else {
       number = who;
     }
 
     const callback = this._platform.is('android') ? this._dialAndroid.bind(this) : this._dial.bind(this);
-    const [err] = await to(callback(number));
+    const [err] = await to(callback(number, intent));
 
     if (!err) {
       if (!this._platform.is('android')) {

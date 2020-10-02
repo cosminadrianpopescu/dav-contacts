@@ -35,6 +35,7 @@ const singleText = {
 
 const singleChoice = {
     'GENDER': 'Gender;F:Female;M:Male',
+    'X-CUSTOM-INTENT': 'Custom Intent;CALL:Call;DIAL:Dial',
     type: 'single-choice',
 }
 

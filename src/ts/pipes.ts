@@ -22,6 +22,9 @@ export class RouteData extends BaseClass {
 export class ContactName extends BaseClass {
   @NgInject(Dav) private _service: Dav;
   public transform(c: Contact): string {
+    if (!c) {
+      return '';
+    }
     return this._service.getContactName(c);
   }
 }
@@ -119,9 +122,17 @@ export class AsHtml extends BaseClass {
 
 @Pipe({name: 'filteringCallableItem'})
 export class FilteringCallableItem extends BaseClass {
+  @NgInject(Dav) private _dav: Dav;
   transform(item: FilteringItem): string | Contact {
     if (item.original instanceof Contact) {
       return item.original;
+    }
+
+    const h: History = item.original;
+
+    if (h.uid) {
+      const c = this._dav.contactById(h.uid);
+      if (c) return c;
     }
 
     return (item.original as History).number;
@@ -150,6 +161,9 @@ export class IsFavorite extends BaseClass {
 export class ContactInitials extends BaseClass {
   @NgInject(Dav) private _service: Dav;
   public transform(c: Contact): string {
+    if (!c) {
+      return '';
+    }
     const name = this._service.getContactName(c);
     return name.replace(/(.)[^ ]+ ?(.)?.*$/g, '$1$2').toUpperCase();
   }

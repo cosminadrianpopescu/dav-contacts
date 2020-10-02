@@ -66,7 +66,6 @@ import { Structured } from '../components/structured';
 import {StructuredMultiple} from '../components/structured-multiple';
 import { Binary } from '../components/binary';
 import {FileChooser} from '@ionic-native/file-chooser/ngx';
-import {HTTP} from '@ionic-native/http/ngx';
 import {FileService} from '../services/file';
 import {Details} from '../pages/details';
 import { Settings } from '../pages/settings';
@@ -74,6 +73,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { CheckboxGroup } from '../components/checkbox-group';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { Swipe } from '../directives/swipe';
+import {Nextcloud} from '../nextcloud/nextcloud';
+import {Webdav} from '../nextcloud/webdav';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,7 @@ import { Swipe } from '../directives/swipe';
     StatusBar,
     SplashScreen, Dav, Store, Navigation, History, Spinner, DialerService,
     WebIntent, AndroidPermissions, CallLog, Sort, CallLog2History,
-    FileChooser, FileService, HTTP, 
+    FileChooser, FileService, Nextcloud, Webdav,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [MainComponent]
