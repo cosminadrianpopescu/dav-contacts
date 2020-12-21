@@ -3,7 +3,7 @@ import {deserialize, deserializers, Convertor} from './decorators';
 import {VCardMetadata} from './lib/src';
 
 export enum LogLevel {DEBUG = 0, INFO = 1, ERROR = 2};
-export enum SyncType {MANUAL, ON_START, INTERVAL};
+export enum SyncType {MANUAL = "0", ON_START = "1", INTERVAL = "2"};
 
 export class ModelFactory {
   private static _create<T>(json: Object, type: Type<T>): T {
@@ -151,4 +151,9 @@ export type SwipeEvent = 'left' | 'right';
 export class ShownField {
   vcardId: string;
   type: 'structured-multiple' | 'structured' | 'groups' | 'single-input' | 'single-choice' | 'multiple-text';
+}
+
+export class LabelValue {
+  label: string;
+  value: string;
 }

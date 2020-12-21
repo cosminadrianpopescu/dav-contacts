@@ -1,14 +1,13 @@
-import { BaseComponent } from '../base';
-import {Component, ViewEncapsulation} from '@angular/core';
-import {NgInject, NgCycle} from '../decorators';
-import {Sort} from '../services/sort';
+import {Component} from '@angular/core';
+import {BaseComponent} from '../base';
+import {NgCycle, NgInject} from '../decorators';
 import {Contact} from '../models';
+import {Sort} from '../services/sort';
 
 @Component({
   selector: 'dav-tiles',
   templateUrl: '../../html/tiles.html',
   styleUrls: ['../../assets/scss/tiles.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Tiles extends BaseComponent {
   @NgInject(Sort) private _sort: Sort;

@@ -1,18 +1,18 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
+import {combineLatest, from} from 'rxjs';
+import {switchMap, tap} from 'rxjs/operators';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
 import {AddressBook, NO_TAG, SelectedTab, SwipeEvent} from '../models';
 import {Dav} from '../services/dav';
-import {Store} from '../services/store';
-import {Sort} from '../services/sort';
-import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import {Navigation} from '../services/navigation';
+import {Sort} from '../services/sort';
+import {Store} from '../services/store';
 
 @Component({
   selector: 'dav-home',
   templateUrl: '../../html/home.html',
   styleUrls: ['../../assets/scss/home.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Home  extends BaseComponent {
   public static lastTab: SelectedTab = null;
@@ -31,30 +31,24 @@ export class Home  extends BaseComponent {
 
   @NgCycle('init')
   protected async _initMe() {
-    this.connect(
-      this._dav.ready$,
-      async () => {
-        if (Home.lastTab != null) {
-          this._selectedTab = Home.lastTab;
-        }
-        else {
-          this._selectedTab = await this._store.getDefaultTab();
-        }
-        this._tab(<any>{index: this._selectedTab});
-        await this._sort.sort();
-      },
+    const obs = this._dav.ready$.pipe(
+      tap(() => this._sort.sort()),
+      switchMap(() => this._sort.sorted$),
     );
 
-    this.connect(this._sort.sorted$, () => {
-      this._setItems();
-      this._loaded = true;
-    });
-
-    const tabs = await this._store.getVisibleTabs();
-    this._tabs[0] = tabs.indexOf(SelectedTab.FAVORITES) != -1;
-    this._tabs[1] = tabs.indexOf(SelectedTab.CONTACTS) != -1;
-    this._tabs[2] = tabs.indexOf(SelectedTab.GROUPS) != -1;
-    this._onlyOneTab = tabs.length == 1;
+    this.connect(
+      combineLatest(from(this._store.getVisibleTabs()), from(this._store.getDefaultTab()), obs), 
+      async ([tabs, selectedTab]) => {
+        await new Promise(resolve => setTimeout(resolve));
+        this._setItems();
+        this._loaded = true;
+        this._tabs[0] = tabs.indexOf(SelectedTab.FAVORITES) != -1;
+        this._tabs[1] = tabs.indexOf(SelectedTab.CONTACTS) != -1;
+        this._tabs[2] = tabs.indexOf(SelectedTab.GROUPS) != -1;
+        this._selectedTab = Home.lastTab != null ? Home.lastTab : selectedTab;
+        this._onlyOneTab = tabs.length == 1;
+      }
+    );
   }
 
   private _setItems() {
@@ -72,7 +66,7 @@ export class Home  extends BaseComponent {
     this.navigate('dial');
   }
 
-  protected _tab(ev: MatTabChangeEvent) {
+  protected _tab(ev: {index: number}) {
     Home.lastTab = ev.index;
     this._nav.routeData$.next({withSearch: [SelectedTab.GROUPS, SelectedTab.CONTACTS].indexOf(ev.index) != -1, title: 'Contacts'});
   }
@@ -81,15 +75,13 @@ export class Home  extends BaseComponent {
     this.navigate('details/new');
   }
 
-  protected _swipe(ev: SwipeEvent, bar: MatTabGroup) {
-    let idx = bar.selectedIndex + (ev == 'left' ? -1 : 1);
-    if (idx < 0) {
-      idx = 0;
+  protected _swipe(ev: SwipeEvent) {
+    this._selectedTab += (ev == 'left' ? -1 : 1);
+    if (this._selectedTab < 0) {
+      this._selectedTab = 0;
     }
-    if (idx >= this._tabs.length) {
-      idx = this._tabs.length - 1;
+    if (this._selectedTab >= this._tabs.length) {
+      this._selectedTab = this._tabs.length - 1;
     }
-
-    bar.selectedIndex = idx;
   }
 }

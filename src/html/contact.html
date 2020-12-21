@@ -1,17 +1,26 @@
-<mat-menu #menu="matMenu">
-  <ng-template matMenuContent let-item="item">
-    <button mat-menu-item (click)="view._edit($event)">View contact details</button>
-    <button *ngIf="view._showCall" mat-menu-item (click)="view._call($event)">Call directly</button>
-  </ng-template>
-</mat-menu>
-<mat-card class="content" dav-contact-click [who]="contact">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <dav-avatar [contact]="contact"></dav-avatar>
+<div *ngIf="inCard && !compact" class="p-card p-component" dav-contact-click [who]="contact">
+    <ng-container [ngTemplateOutlet]="contactTpl"></ng-container>
+</div>
+
+<ng-container *ngIf="!inCard || compact" [ngTemplateOutlet]="contactTpl"></ng-container>
+
+<p-overlayPanel #menu appendTo="body">
+  <ng-template pTemplate>
+    <div class="menu">
+      <dav-button icon="fa fa-info" label="View contact details" (notify)="view._edit($event)"></dav-button>
+      <dav-button *ngIf="view._showCall" icon="fa fa-phone" label="Call directly" (notify)="view._call($event)"></dav-button>
     </div>
-    <mat-card-title [innerHTML]="contact | contactName | highlightedName | async | asHtml"></mat-card-title>
-    <mat-card-subtitle>{{contact | contactPhone}}</mat-card-subtitle>
-    <mat-icon *ngIf="view._showFav" [ngClass]="{fav: (contact | isFavorite)}" (click)="view._fav($event)">{{(contact | isFavorite) ? 'star' : 'star_outline'}}</mat-icon>
-    <button mat-icon-button (click)="view._preventClick($event)" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
-  </mat-card-header>
-</mat-card>
+  </ng-template>
+</p-overlayPanel>
+
+<ng-template #contactTpl>
+  <div class="flex p-component" [ngClass]="{'p-card-body': inCard, 'out-card': !inCard}">
+    <div class="col1" *ngIf="!compact"><dav-avatar [contact]="contact"></dav-avatar></div>
+    <div class="col2">
+      <h3 [innerHTML]="contact | contactName | highlightedName | async | asHtml"></h3>
+      <div *ngIf="!compact" class="phone">{{contact | contactPhone}}</div>
+    </div>
+    <dav-button *ngIf="view._showFav && !compact" icon="fa fa-star{{(contact | isFavorite) ? '' : '-o'}}" (notify)="view._fav($event)"></dav-button>
+    <dav-button *ngIf="!compact" (notify)="view._preventClick($event); menu.toggle($event)" icon="fa fa-ellipsis-v"></dav-button>
+  </div>
+</ng-template>

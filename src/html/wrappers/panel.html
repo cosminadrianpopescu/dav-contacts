@@ -1,0 +1,11 @@
+<p-panel #panel [toggleable]="toggleable" [collapsed]="collapsed">
+  <p-header (click)="view._click()">
+    <div class="flex">
+      <div class="header">{{header}}</div>
+      <div class="header-icon">
+        <dav-button styleClass="p-button-rounded" icon="fa fa-angle-{{(view._collapsed$ | async) ? 'down' : 'up'}}"></dav-button>
+      </div>
+    </div>
+  </p-header>
+  <ng-content></ng-content>
+</p-panel>

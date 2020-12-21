@@ -1,9 +1,7 @@
-<mat-grid-list cols="2" rowHeight="19%">
-  <mat-grid-tile dav-contact-click [who]="contact" [style.background-color]="contact | contactColor" *ngFor="let contact of view._items">
-    <div class="wrapper">
-      <img [src]="contact | contactPhoto" *ngIf="contact | contactPhoto" />
-      <div class="row1" *ngIf="!(contact | contactPhoto)">{{contact | contactInitials}}</div>
-      <div [ngClass]="(contact | contactPhoto) ? 'row3' : 'row2'">{{contact | contactName}}</div>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+<div class="p-d-flex p-flex-wrap">
+  <div class="tile" *ngFor="let contact of view._items" [style.background-color]="contact | contactColor" dav-contact-click [who]="contact">
+    <img [src]="contact | contactPhoto" *ngIf="contact | contactPhoto" />
+    <div class="initials" *ngIf="!(contact | contactPhoto)">{{contact | contactInitials}}</div>
+    <div class="name" [ngClass]="(contact | contactPhoto) ? 'row3' : 'row2'">{{contact | contactName}}</div>
+  </div>
+</div>

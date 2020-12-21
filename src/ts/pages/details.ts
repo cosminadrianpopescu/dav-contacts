@@ -1,17 +1,16 @@
-import {Component, ViewEncapsulation, ViewChild, TemplateRef} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
 import {Contact, ModelFactory, ShownField} from '../models';
 import {Dav} from '../services/dav';
 import {Navigation} from '../services/navigation';
 import {Store} from '../services/store';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'dav-details',
   templateUrl: '../../html/details.html',
   styleUrls: ['../../assets/scss/details.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Details extends BaseComponent {
   @NgInject(Navigation) private _nav: Navigation;

@@ -1,13 +1,13 @@
-import {Component, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import {BaseComponent} from '../base';
-import {ToolbarEvent} from '../models';
-import {MatInput} from '@angular/material/input';
-import {NgInject, NgCycle} from '../decorators';
-import {Dav} from '../services/dav';
-import {Navigation} from '../services/navigation';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {fromEvent} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {BaseComponent} from '../base';
+import {NgCycle, NgInject} from '../decorators';
+import {ToolbarEvent} from '../models';
+import {Dav} from '../services/dav';
+import {Navigation} from '../services/navigation';
 import {Search} from '../services/search';
+import {TextInput} from './wrappers/input';
 
 @Component({
   selector: 'dav-toolbar',
@@ -23,8 +23,7 @@ export class Toolbar extends BaseComponent {
 
   protected _withSearch: boolean = false;
 
-  @ViewChild('input', {static: true, read: MatInput}) private _input: MatInput;
-  @ViewChild('natInput', {static: true, read: ElementRef}) private _natInput: ElementRef;
+  @ViewChild('input', {static: true, read: TextInput}) private _input: TextInput;
 
   @NgCycle('init')
   protected _initMe() {
@@ -44,7 +43,7 @@ export class Toolbar extends BaseComponent {
 
   @NgCycle('afterViewInit')
   protected _afterView() {
-    const obs = fromEvent(this._natInput.nativeElement, 'keyup')
+    const obs = fromEvent(this._input.input.nativeElement, 'keyup')
       .pipe(debounceTime(300));
     this.connect(obs, () => Search.notify$.next(this._term));
   }

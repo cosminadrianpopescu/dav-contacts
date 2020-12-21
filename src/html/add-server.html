@@ -1,4 +1,17 @@
-<mat-form-field appearance="standard">
+<div class="form p-fluid">
+  <div class="p-field">
+    <dav-input class="p-field" label="Nextcloud URL" [model]="view._model?.url" (modelChange)="view._model.url = $event"></dav-input>
+  </div>
+  <div class="p-field">
+    <dav-dropdown
+      label="Synchronization"
+      [isPrimitive]="true"
+      [options]="view._options"
+      (modelChange)="view._model.sync.type = $event"></dav-dropdown>
+  </div>
+  <dav-button (notify)="view._add()" label="Login"></dav-button>
+</div>
+<!--mat-form-field appearance="standard">
   <mat-label>Nextcloud URL</mat-label>
   <input matInput [ngModel]="view._model?.url" (ngModelChange)="view._model.url = $event"/>
 </mat-form-field>
@@ -10,4 +23,4 @@
 </mat-form-field>
 <div class="button">
   <button (click)="view._add()" mat-raised-button color="primary">Login</button>
-</div>
+</div-->

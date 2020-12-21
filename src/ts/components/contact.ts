@@ -1,19 +1,21 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BaseComponent} from '../base';
+import {NgCycle, NgInject} from '../decorators';
 import {Contact as Model} from '../models';
-import {NgInject, NgCycle} from '../decorators';
 import {Dav} from '../services/dav';
-import {Store} from '../services/store';
 import {Dialer} from '../services/dialer';
+import {Store} from '../services/store';
 
 @Component({
   selector: 'dav-contact',
   templateUrl: '../../html/contact.html',
   styleUrls: ['../../assets/scss/contact.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Contact extends BaseComponent {
   @Input() public contact: Model;
+  @Input() public inCard: boolean = true;
+  @Input() public compact: boolean = false;
+
   @NgInject(Dav) private _dav: Dav;
   @NgInject(Dialer) private _dialer: Dialer;
   @NgInject(Store) private _store: Store;

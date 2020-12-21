@@ -1,15 +1,13 @@
-import {EventEmitter, Injector, Provider, SimpleChanges, TemplateRef, Injectable, ComponentFactoryResolver, ApplicationRef, EmbeddedViewRef, ComponentRef, Input, Directive} from '@angular/core';
+import {ApplicationRef, ComponentFactoryResolver, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Injectable, Injector, Input, Provider, SimpleChanges, TemplateRef} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import {Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
-import {CycleType, METADATA, NgInject, NgCycle} from './decorators';
-import {Logger, LoggingInstance} from './services/logging';
 import {Loading} from './components/loading';
-import {Contact} from './models';
+import {CycleType, METADATA, NgCycle, NgInject} from './decorators';
 import {VCardMetadata, VCardParser} from './lib/src';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {filter, distinctUntilChanged, map} from 'rxjs/operators';
-import {Navigation} from './services/navigation';
+import {Contact} from './models';
+import {Logger, LoggingInstance} from './services/logging';
+import {MessageService} from 'primeng/api';
 
 export class Statics {
   public static injector: Injector;
@@ -80,7 +78,8 @@ export class Spinner extends BaseClass {
 export class BaseComponent extends BaseClass {
   @NgInject(Router) protected _router: Router;
   @NgInject(Spinner) private _spinner: Spinner;
-  @NgInject(MatSnackBar) private __modal__: MatSnackBar;
+  @NgInject(MessageService) private _toast: MessageService;
+  protected id: string;
 
   public get view(): any {
     return this;
@@ -93,6 +92,7 @@ export class BaseComponent extends BaseClass {
 
   constructor() {
     super();
+    this.id = BaseClass.UUID();
     this.__resolveDecorations__('__cycles__', this.constructor, (obj: Object) => {
       if (!this.__cycles__.get(obj['arg'])) {
         this.__cycles__.set(obj['arg'], []);
@@ -150,7 +150,7 @@ export class BaseComponent extends BaseClass {
   }
 
   protected alert(message: string) {
-    this.__modal__.open(message, '', {duration: 3000});
+    this._toast.add({severity: 'success', detail: message, key: 'abc', sticky: false});
   }
 }
 
@@ -188,6 +188,8 @@ export class BaseInputWithMetadata extends BaseInputComponent {
       this.metadata = VCardParser.newMetadata(this.vcardId);
       this.contact.metadata.push(this.metadata);
     }
+
+    console.log('metadata is', this.metadata);
 
     if (this.inputType != 'number') {
       return ;

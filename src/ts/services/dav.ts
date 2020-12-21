@@ -96,15 +96,17 @@ export class Dav extends BaseClass {
     const idx = this.addressBook.contacts.indexOf(_c);
     this.addressBook.contacts[idx] = c;
     c.metadata = c.metadata.filter(m => {
-      if (VCardParser.getType(m.vcardId) == 'structured') {
+      const type = VCardParser.getType(m.vcardId);
+      console.log('type is', type, 'for', m);
+      if (type == 'structured') {
         return Array.isArray(m.value) && m.value.length > 0;
       }
 
-      if (VCardParser.getType(m.vcardId) == 'multiple-text' || VCardParser.getType(m.vcardId) == 'structured-multiple') {
+      if (['multiple-text', 'structured-multiple'].indexOf(type) != -1) {
         return Array.isArray(m.values) && m.values.length > 0;
       }
 
-      if (VCardParser.getType(m.vcardId) == 'single-input' || VCardParser.getType(m.vcardId) == 'single-choice' || VCardParser.getType(m.vcardId) == 'tags') {
+      if (['single-binary', 'single-input', 'single-choice', 'tags'].indexOf(type) != -1) {
         return m.value;
       }
 
@@ -319,16 +321,21 @@ export class Dav extends BaseClass {
     await this.addContactTag(c, FAV_TAG);
   }
 
-  private async _doAddContactTag(c: Contact, tag: string): Promise<boolean> {
-    let result = false;
-    let m = c.metadata.find(m => m.vcardId == CATEGORIES);
+  private _searchMetadata(c: Contact, mId: string): VCardMetadata {
+    let m = c.metadata.find(m => m.vcardId == mId);
     if (!m) {
       m = new VCardMetadata();
-      m.vcardId = CATEGORIES;
+      m.vcardId = mId;
       m.value = '';
       c.metadata.push(m);
-      result = true;
     }
+
+    return m;
+  }
+
+  private _doAddContactTag(c: Contact, tag: string): boolean {
+    let result = false;
+    let m = this._searchMetadata(c, CATEGORIES);
 
     if ((m.value as string).split(',').indexOf(tag) == -1) {
       m.value += (m.value == '' ? '' : ',') + tag;
@@ -339,11 +346,16 @@ export class Dav extends BaseClass {
   }
   
   public async addContactTag(c: Contact, tag: string, sync: boolean = true) {
-    const result = await this._doAddContactTag(c, tag);
+    const result = this._doAddContactTag(c, tag);
     if (result && sync) {
       await this.update(c);
       await this.sync();
     }
+  }
+
+  public setContactTags(c: Contact, tags: Array<string>) {
+    let m = this._searchMetadata(c, CATEGORIES);
+    m.value = tags.join(',');
   }
 
   private async _doRemoveTag(c: Contact, tag: string): Promise<boolean> {

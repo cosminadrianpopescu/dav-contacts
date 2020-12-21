@@ -1,12 +1,11 @@
-import {Component, NgZone, ViewChild} from '@angular/core';
-import {MatSidenav} from '@angular/material/sidenav';
+import {Component, NgZone} from '@angular/core';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Platform} from '@ionic/angular';
 import {BaseComponent} from '../base';
 import {NgInject} from '../decorators';
 import {ToolbarEvent} from '../models';
-import { Dav } from '../services/dav';
+import {Dav} from '../services/dav';
 
 
 @Component({
@@ -17,7 +16,8 @@ import { Dav } from '../services/dav';
 export class Main extends BaseComponent {
   @NgInject(NgZone) private _zone: NgZone;
   @NgInject(Dav) private _dav: Dav;
-  @ViewChild('drawer', {static: true, read: MatSidenav}) private _drawer: MatSidenav;
+  protected _sidebar: boolean = false;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -43,12 +43,12 @@ export class Main extends BaseComponent {
 
   protected _toolbar(ev: ToolbarEvent) {
     if (ev.type == 'menu') {
-      this._drawer.toggle();
+      this._sidebar = true;
     }
   }
 
   protected async _nav(where: string) {
-    this._drawer.toggle();
+    this._sidebar = false;
     if (where == 'sync') {
       await this.showLoading();
       await this._dav.sync();

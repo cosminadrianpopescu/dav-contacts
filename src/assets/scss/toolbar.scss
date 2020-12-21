@@ -1,31 +1,14 @@
-.fill {
-  flex: 1 1 auto;
-}
-
-.left {
+.flex {
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
-input, mat-label {
-  font-size: 16px;
+.flex-full {
+  display: flex;
+  flex: 1;
 }
 
-.back-button {
-  position: relative;
-  top: 8px;
-}
-
-mat-form-field {
-  margin-left: 10px;
-  width: calc(100% - 20px);
-  position: relative;
-  top: 2px;
-}
-
-mat-icon {
-  padding-top: 10px;
-}
-
-.buttons mat-icon {
-  padding-left: 20px;
+.width-full {
+  width: 100%;
 }

@@ -1,18 +1,16 @@
+import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BaseMultipleText} from '../base';
-import {Component, ViewEncapsulation, ViewChild, TemplateRef} from '@angular/core';
 import {NgCycle, NgInject} from '../decorators';
 import {Dav} from '../services/dav';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 const CUSTOM = 'Custom';
-const REMOVE = 'Remove';
 type T = {value: string, type: string}
 
 @Component({
   selector: 'dav-multiple-text',
   templateUrl: '../../html/form.html',
   styleUrls: ['../../assets/scss/form.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class MultipleText extends BaseMultipleText {
   @NgInject(Dav) private _dav: Dav;
@@ -26,7 +24,6 @@ export class MultipleText extends BaseMultipleText {
   protected _initMe() {
     this.types = this._dav.getMetadataTypes(this.metadata);
     this.types.push(CUSTOM);
-    this.types.push(REMOVE);
   }
 
   protected _doAdd(value: T) {
@@ -42,10 +39,7 @@ export class MultipleText extends BaseMultipleText {
   }
 
   protected _changeType(ev: string, value: T) {
-    if (ev == REMOVE) {
-      this._remove(value);
-      return ;
-    }
+    console.log('ev is', ev);
     if (ev != CUSTOM) {
       value.type = ev;
       return ;

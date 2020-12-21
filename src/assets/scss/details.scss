@@ -1,35 +1,18 @@
-dav-details {
-  .content {
-    height: 100%;
-    overflow: auto;
+.flex {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  &--margin {
+    margin: 0.5rem;
   }
 
-  .ro-icon {
-    margin-left: 30px;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
-  }
-
-  mat-list-item.readonly {
-    height: 88px;
-    overflow: hidden;
-  }
-
-  dav-structured, dav-single-binary, dav-structured-multiple, dav-single-input, dav-single-choice, dav-multiple-text, dav-groups {
-    width: 100%;
-  }
-
-  mat-list-item {
-    height: auto !important;
-    margin-bottom: 15px;
-  }
-
-  .mat-list-item-content {
+  &--center {
     justify-content: center;
   }
+}
 
-  .second {
-    margin-left: 10px;
-  }
+.filler {
+  display: flex;
+  flex: 1;
+  content: ' ';
 }

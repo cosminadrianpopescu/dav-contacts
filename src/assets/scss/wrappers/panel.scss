@@ -1,0 +1,33 @@
+dav-panel {
+  .p-panel-header {
+    border-bottom: none !important;
+  }
+
+  .p-panel-content {
+    background: none !important;
+  }
+
+  .p-panel-icons {
+    display: none;
+  }
+
+  .flex {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+
+  .header {
+    display: flex;
+    flex: 1;
+    align-items: center;
+  }
+
+  .header-icon {
+    display: flex;
+  }
+
+  p-header {
+    width: 100%
+  }
+}

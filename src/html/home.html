@@ -1,44 +1,38 @@
-<mat-tab-group
+<p-tabView
+   [(activeIndex)]="view._selectedTab"
   [ngClass]="{'no-header': view._onlyOneTab}"
-  [selectedIndex]="view._selectedTab"
-  [disablePagination]="true"
   *ngIf="view._loaded"
-  #bar
-  (selectedTabChange)="view._tab($event)"
-  (swipe)="view._swipe($event, bar)"
+  (onChange)="view._tab($event)"
+  (swipe)="view._swipe($event)"
   dav-swipe
->
-  <mat-tab *ngIf="view._tabs[0]">
-    <ng-template mat-tab-label><mat-icon>star_outline</mat-icon></ng-template>
-    <ng-template matTabContent><dav-tiles></dav-tiles></ng-template>
-  </mat-tab>
-  <mat-tab *ngIf="view._tabs[1]">
-    <ng-template mat-tab-label><mat-icon>person</mat-icon></ng-template>
-    <ng-template matTabContent>
-      <cdk-virtual-scroll-viewport itemSize="86">
-        <dav-contact *cdkVirtualFor="let contact of (view._book?.contacts | filteredContacts | async); templateCacheSize: 0" [contact]="contact"></dav-contact>
-      </cdk-virtual-scroll-viewport>
-    </ng-template>
-  </mat-tab>
-  <mat-tab *ngIf="view._tabs[2]">
-    <ng-template mat-tab-label><mat-icon>group</mat-icon></ng-template>
-    <ng-template matTabContent>
-      <mat-accordion class="accordion">
-        <mat-expansion-panel *ngFor="let tag of view._tags">
-          <mat-expansion-panel-header><mat-panel-title>{{tag}}</mat-panel-title></mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <dav-contact *ngFor="let contact of (tag | contactsForTag:view._sync | filteredContacts | async)" [contact]="contact"></dav-contact>
-          </ng-template>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
-<div class="fab-wrapper">
-  <div class="fab-middle">
-    <button (click)="view._dial()" mat-fab color="primary"><mat-icon>dialpad</mat-icon></button>
-  </div>
-  <div class="fab-right">
-    <button (click)="view._add()" mat-fab color="primary"><mat-icon>add</mat-icon></button>
-  </div>
+  >
+  <p-tabPanel pRipple *ngIf="view._tabs[0]">
+    <ng-template pTemplate="header"><ng-container [ngTemplateOutlet]="headerTpl" [ngTemplateOutletContext]="{$implicit: {l: 'Favourites', c: 'fa fa-star-o'} }"></ng-container></ng-template>
+    <dav-tiles></dav-tiles>
+  </p-tabPanel>
+
+  <p-tabPanel pRipple *ngIf="view._tabs[1]">
+    <ng-template pTemplate="header"><ng-container [ngTemplateOutlet]="headerTpl" [ngTemplateOutletContext]="{$implicit: {l: 'Contacts', c: 'fa fa-user'}}"></ng-container></ng-template>
+    <dav-contact *ngFor="let contact of (view._book?.contacts | filteredContacts | async); templateCacheSize: 0" [contact]="contact"></dav-contact>
+  </p-tabPanel>
+
+  <p-tabPanel pRipple *ngIf="view._tabs[2]">
+    <ng-template pTemplate="header"><ng-container [ngTemplateOutlet]="headerTpl" [ngTemplateOutletContext]="{$implicit: {l: 'Groups', c: 'fa fa-users'}}"></ng-container></ng-template>
+    <dav-panel *ngFor="let tag of view._tags" [header]="tag">
+      <dav-contact [inCard]="false" *ngFor="let contact of (tag | contactsForTag:view._sync | filteredContacts | async)" [contact]="contact"></dav-contact>
+    </dav-panel>
+  </p-tabPanel>
+</p-tabView>
+
+<ng-template #headerTpl let-ctx>
+  <i class="{{ctx.c}} margin"></i>
+  <span>{{ctx.l}}</span>
+</ng-template>
+
+<ng-template #tagHeaderTpl></ng-template>
+
+<div class="footer">
+  <div class="spacer"></div>
+  <dav-button [isText]="false" styleClass="p-button-lg p-button-rounded p-shadow-13" icon="fa fa-phone" (notify)="view._dial()"></dav-button>
+  <dav-button [isText]="false" styleClass="p-button-lg p-button-rounded p-shadow-13" icon="fa fa-plus" (notify)="view._add()"></dav-button>
 </div>

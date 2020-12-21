@@ -1,40 +1,32 @@
-@import '~@angular/material/theming';
-$app-primary: mat-palette($mat-light-blue);
+.menu {
+  display: flex;
+  flex-direction: column;
+}
 
-dav-contact {
-  .content {
-    margin-top: 10px !important;
-  }
+.p-card, .out-card {
+  margin-bottom: 1rem;
+}
 
-  .fav {
-    color: #edda25;
-  }
+.flex {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
 
-  mat-card-subtitle {
-    margin-bottom: 0px !important;
-  }
+.col1 {
+  margin-right: 0.5rem;
+}
 
-  img, mat-icon {
-    width: 40px !important;
-    height: 40px !important;
-  }
+h3 {
+  margin: 0px;
+}
 
-  mat-icon {
-    font-size: 36px !important;
-  }
+.col2 {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
-  .mat-card-header-text {
-    width: calc(100% - 80px) !important;
-  }
-
-  .highlighted {
-    color: mat-color($app-primary) !important;
-  }
-
-  button {
-    mat-icon {
-      position: relative;
-      top: 8px;
-    }
-  }
+.phone {
+  font-size: 0.8rem;
 }

@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {BaseClass} from './base';
 import {NgInject} from './decorators';
 import {VCardMetadata, VCardStructuredProperty} from './lib/src';
-import {Contact, FilteringItem, History, NO_TAG, KeyValue} from './models';
+import {Contact, FilteringItem, History, KeyValue, NO_TAG, LabelValue} from './models';
 import {Dav} from './services/dav';
 import {Navigation} from './services/navigation';
 import {Search} from './services/search';
@@ -38,7 +38,7 @@ export class HighlightedName extends BaseClass {
           return name;
         }
 
-        return name.replace(new RegExp(`(${text})`, 'i'), '<span class="highlighted">$1</span>');
+        return name.replace(new RegExp(`(${text})`, 'i'), '<span style="color: var(--primary-color);">$1</span>');
       })
     );
   }
@@ -130,12 +130,14 @@ export class FilteringCallableItem extends BaseClass {
 
     const h: History = item.original;
 
-    if (h.uid) {
-      const c = this._dav.contactById(h.uid);
-      if (c) return c;
+    if (!h.uid) {
+      return h.number;
     }
 
-    return (item.original as History).number;
+    const c = this._dav.contactById(h.uid);
+    if (c) return c;
+
+    return h.number;
   }
 }
 
@@ -184,12 +186,7 @@ export class ContactColor extends BaseClass {
 @Pipe({name: 'contactTags'})
 export class ContactTags extends BaseClass {
   @NgInject(Dav) private _dav: Dav;
-  /**
-   * Argument `_arg` is used to trigger the angular
-   * update. Just change it's value and angular will again check
-   * the contact tags.
-   */
-  transform(c: Contact, _arg?: boolean): Array<string> {
+  transform(c: Contact): Array<string> {
     return this._dav.getContactTags(c);
   }
 }
@@ -224,5 +221,29 @@ export class PhoneNumber extends BaseClass {
 export class IsChecked extends BaseClass {
   transform(option: KeyValue, model: Array<string>): boolean {
     return model.map(x => String(x)).indexOf(option.key) != -1;
+  }
+}
+
+@Pipe({name: 'fieldTitle'})
+export class FieldTitle {
+  public transform(m: VCardMetadata): string {
+    if (!m) {
+      return '';
+    }
+    return m.label;
+  }
+}
+
+@Pipe({name: 'hasAdd'})
+export class HasAdd {
+  public transform(selector: string, ro: boolean): boolean {
+    return !ro && ['dav-multiple-text', 'dav-structured-multiple'].indexOf(selector) != -1;
+  }
+}
+
+@Pipe({name: 'asOptions'})
+export class AsOptions {
+  public transform(types: Array<string>): Array<LabelValue> {
+    return types.map(t => <LabelValue>{label: t, value: t});
   }
 }

@@ -5,8 +5,6 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCardModule} from '@angular/material/card';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
@@ -17,10 +15,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSelectModule} from '@angular/material/select';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PreloadAllModules, RouteReuseStrategy, RouterModule} from '@angular/router';
@@ -76,6 +70,28 @@ import { Swipe } from '../directives/swipe';
 import {Nextcloud} from '../nextcloud/nextcloud';
 import {Webdav} from '../nextcloud/webdav';
 
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
+import {SidebarModule} from 'primeng/sidebar';
+import {RippleModule} from 'primeng/ripple';
+import {ButtonModule} from 'primeng/button';
+import {Button} from '../components/wrappers/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {ToolbarModule} from 'primeng/toolbar';
+import {TextInput} from '../components/wrappers/input';
+import {TabViewModule} from 'primeng/tabview';
+import {Panel} from '../components/wrappers/panel';
+import {PanelModule} from 'primeng/panel';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {DropdownModule, Dropdown} from 'primeng/dropdown';
+import {Dropdown as DropdownWidget} from '../components/wrappers/dropdown';
+import {CardModule} from 'primeng/card';
+import {ChipsModule} from 'primeng/chips';
+
+Dropdown.prototype.getOptionValue = function(option: any) {
+  return option;
+}
+
 @NgModule({
   declarations: [
     MainComponent, Home, Toolbar, pipes.RouteData, SideMenu, Contact,
@@ -86,26 +102,33 @@ import {Webdav} from '../nextcloud/webdav';
     pipes.ContactColor, pipes.HighlightedName, pipes.ContactTags, Groups,
     Playground, SingleInput, SingleChoice, MultipleText, pipes.OptionValue, Structured,
     StructuredMultiple, pipes.DisplayableValues, pipes.PhoneNumber, Binary, Details,
-    Settings, CheckboxGroup, pipes.IsChecked, Swipe,
+    Settings, CheckboxGroup, pipes.IsChecked, Swipe, pipes.FieldTitle, pipes.HasAdd,
+    pipes.AsOptions,
+
+    Button, TextInput, Panel, DropdownWidget,
   ],
   entryComponents: [Home, SideMenu, NumberSelector,],
   imports: [
     MatSelectModule, MatFormFieldModule, FormsModule, MatInputModule,
-    BrowserModule, IonicModule.forRoot(), MatToolbarModule, MatSidenavModule,
+    BrowserModule, IonicModule.forRoot(), 
     MatCardModule, MatGridListModule, MatProgressSpinnerModule,
-    MatButtonModule, MatIconModule, MatTabsModule, 
+    MatButtonModule, MatIconModule, 
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, useHash: true }),
     BrowserAnimationsModule, NoKeyboardModule, MatListModule, MatMenuModule,
-    MatBottomSheetModule, MatRadioModule, MatExpansionModule, MatChipsModule,
-    ScrollingModule, MatDialogModule, MatBadgeModule, MatSnackBarModule,
+    MatBottomSheetModule, MatRadioModule, 
+    ScrollingModule, MatDialogModule, MatBadgeModule, 
     MatSlideToggleModule, MatCheckboxModule,
+
+    ToastModule, SidebarModule, RippleModule, ButtonModule, InputTextModule,
+    ToolbarModule, TabViewModule, PanelModule, OverlayPanelModule, DropdownModule,
+    CardModule, ChipsModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     StatusBar,
     SplashScreen, Dav, Store, Navigation, History, Spinner, DialerService,
     WebIntent, AndroidPermissions, CallLog, Sort, CallLog2History,
-    FileChooser, FileService, Nextcloud, Webdav,
+    FileChooser, FileService, Nextcloud, Webdav, MessageService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [MainComponent]

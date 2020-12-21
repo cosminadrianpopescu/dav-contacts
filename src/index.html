@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
@@ -17,8 +17,94 @@
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style id="custom-style">
+    .p-tabview > ul {
+      justify-content: space-between;
+    }
+    p-chips ul, .p-chips {
+      width: 100%;
+    }
+    .p-dropdown-label.p-inputtext {
+      border-bottom: none !important;
+    }
+    .p-float-label input:focus ~ label, .p-float-label input.p-filled ~ label, .p-float-label textarea:focus ~ label, .p-float-label textarea.p-filled ~ label, .p-float-label .p-inputwrapper-focus ~ label, .p-float-label .p-inputwrapper-filled ~ label {
+      top: -0.25rem !important;
+    }
+    dav-details p-card .p-card {
+      margin: 0.5rem;
+    }
+    dav-details p-card .p-card-content {
+      padding: 0px !important;
+    }
+    .p-button.p-button-lg {
+      font-size: 1.5rem !important;
+      padding: 0.825rem 1.5rem !important;
+    }
+    .p-button.p-button-lg .p-button-icon {
+      font-size: 1.5rem !important;
+    }
+    .p-button.p-button-icon-only.p-button-rounded.p-button-lg {
+      height: 2.7rem !important;
+    }
+    .p-button:focus, .p-tabview *:focus, .p-chips .p-focus {
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    .p-inputtext {
+      border: none !important;
+      border-bottom: 1px solid #ced4da !important;
+      border-radius: 0px !important;
+      background-color: transparent !important;
+    }
+
+    .p-datatable-resizable .p-datatable-tbody>tr>td {
+      white-space: inherit !important;
+    }
+
+    .p-inputtext:enabled:focus, .p-inputwrapper-focus .p-chips {
+      border-bottom: 1px solid #2196F3 !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .p-dropdown:not(.p-disabled).p-focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    p-dynamicdialog .p-dialog-content {
+      padding: 0px !important;
+    }
+
+    .p-button:disabled {
+      opacity: 0.2 !important;
+    }
+
+    body.light {
+      background-color: white;
+    }
+
+    .p-blockui {
+      z-index: 2000;
+    }
+
+    .p-toolbar {
+      padding: 0.5rem !important;
+    }
+
+    dav-panel .p-panel-header {
+      background: none !important;
+    }
+
+    dav-panel .p-toggleable-content {
+      background: none !important;
+    }
+
+    dav-panel .p-toggleable-content[aria-hidden="true"] {
+      border-bottom: 1px solid var(--surface-d);
+    }
+
+  </style>
 </head>
 
 <body style="margin: 0px; height: 100%;">
