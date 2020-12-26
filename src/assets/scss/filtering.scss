@@ -1,23 +1,20 @@
-@import '~@angular/material/theming';
-$app-accent: mat-palette($mat-pink);
-$app-primary: mat-palette($mat-light-blue);
+.flex {
+  width: 100%;
+  display: flex;
+  align-items: center;
 
-dav-contacts-list, dav-history {
-  mat-list {
-    height: calc(100% - 8px);
+  &--column {
+    align-items: flex-start !important;
+    flex-direction: column;
   }
-  cdk-virtual-scroll-viewport {
-    height: 100%;
-  }
-  mat-list-item {
-    max-height: 56px;
-  }
+}
 
-  mat-list-item.local {
-    color: mat-color($app-accent) !important;
-  }
+.padding {
+  padding: 0.5rem;
+}
 
-  .highlighted {
-    color: mat-color($app-primary) !important;
-  }
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }

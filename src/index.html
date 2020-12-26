@@ -20,12 +20,35 @@
 
   <style id="custom-style">
     .p-tabview > ul {
-      justify-content: space-between;
+      justify-content: space-evenly;
+    }
+    .p-tabview > ul > li {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+    .p-tabview > ul > li > a {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .p-tabview-ink-bar {
+      display: none !important;
+    }
+    .highlighted {
+      color: var(--primary-color);
+    }
+    .p-button.p-button-text.p-button-no-hover:enabled:hover {
+      background: var(--primary-color-text) !important;
+    }
+    dav-settings .p-panel-content {
+      padding: 0px !important;
     }
     p-chips ul, .p-chips {
       width: 100%;
     }
-    .p-dropdown-label.p-inputtext {
+    .p-dropdown-label.p-inputtext, .p-chips .p-inputtext.p-focus {
       border-bottom: none !important;
     }
     .p-float-label input:focus ~ label, .p-float-label input.p-filled ~ label, .p-float-label textarea:focus ~ label, .p-float-label textarea.p-filled ~ label, .p-float-label .p-inputwrapper-focus ~ label, .p-float-label .p-inputwrapper-filled ~ label {

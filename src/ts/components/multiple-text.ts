@@ -1,5 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Component} from '@angular/core';
 import {BaseMultipleText} from '../base';
 import {NgCycle, NgInject} from '../decorators';
 import {Dav} from '../services/dav';
@@ -14,11 +13,9 @@ type T = {value: string, type: string}
 })
 export class MultipleText extends BaseMultipleText {
   @NgInject(Dav) private _dav: Dav;
-  @NgInject(MatDialog) private _modal: MatDialog;
-  @ViewChild('confirm') private _confirmTpl: TemplateRef<any>;
 
   protected _newType: string = '';
-  private _ref: MatDialogRef<any, any>;
+  protected _confirm: T = null;
 
   @NgCycle('init')
   protected _initMe() {
@@ -26,26 +23,23 @@ export class MultipleText extends BaseMultipleText {
     this.types.push(CUSTOM);
   }
 
-  protected _doAdd(value: T) {
-    this._ref.close();
+  protected _doAdd() {
     if (this._newType == '') {
       return ;
     }
 
-    this.types.push(this._newType);
-    this.types = [].concat(this.types);
-    this._changeType(this._newType, value);
+    this._changeType(this._newType, this._confirm);
     this.metadata.values = [].concat(this.metadata.values);
+    this._confirm = null;
   }
 
   protected _changeType(ev: string, value: T) {
-    console.log('ev is', ev);
     if (ev != CUSTOM) {
       value.type = ev;
       return ;
     }
 
-    this._ref = this._modal.open(this._confirmTpl, {data: value});
+    this._confirm = value;
   }
 
   protected _add() {

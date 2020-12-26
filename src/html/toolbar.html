@@ -3,7 +3,7 @@
     <dav-button (notify)="view._back()" [hidden]="!view._inSearch" icon="fa fa-arrow-left"></dav-button>
     <div [ngClass]="{'flex-full': !view._inSearch}" [hidden]="view._inSearch">{{'title' | routeData | async}}</div>
     <dav-input class="width-full" [hidden]="!view._inSearch" #input [(model)]="view._term"></dav-input>
-    <dav-button icon="fa fa-search" (notify)="view._search()"></dav-button>
+    <dav-button [hidden]="!view._withSearch" icon="fa fa-search" (notify)="view._search()"></dav-button>
     <dav-button icon="fa fa-bars" (notify)="view._menu()"></dav-button>
   </div>
 </p-toolbar>

@@ -5,6 +5,7 @@ import {Contact as Model} from '../models';
 import {Dav} from '../services/dav';
 import {Dialer} from '../services/dialer';
 import {Store} from '../services/store';
+import {OverlayPanel} from 'primeng/overlaypanel';
 
 @Component({
   selector: 'dav-contact',
@@ -34,6 +35,11 @@ export class Contact extends BaseComponent {
     ev.stopPropagation();
     ev.stopImmediatePropagation();
     ev.preventDefault();
+  }
+
+  protected _menuClick(ev: MouseEvent, menu: OverlayPanel) {
+    menu.toggle(ev);
+    this._preventClick(ev);
   }
 
   protected async _fav(ev: MouseEvent) {

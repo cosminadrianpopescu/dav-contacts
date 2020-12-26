@@ -1,23 +1,22 @@
-<mat-grid-list cols="7" rowHeight="16%">
-  <mat-grid-tile colspan="6" rowspan="1" class="number">
-    <input #input no-keyboard type="text" matInput [ngModel]="text" (ngModelChange)="view._change($event)"/>
-  </mat-grid-tile>
-  <mat-grid-tile [long-press]="true" (longPress)="view._clear()" (click)="view._del()" class="top-left" colspan="1" rowspan="1">
-    <mat-icon>backspace</mat-icon>
-  </mat-grid-tile>
-  <mat-grid-tile (click)="view._key(key.no)"
+<div class="input-row p-component">
+  <div class="input">
+    <input #input type="text" no-keyboard pInputText [ngModel]="text" (ngModelChange)="view._change($event)"/>
+  </div>
+  <div class="icon"><dav-button icon="fa fa-arrow-left" styleClass="p-button-lg" [long-press]="true" (longPress)="view._clear()" (notify)="view._del()"></dav-button></div>
+</div>
+<div class="dialpad">
+  <div class="key"
     *ngFor="let key of view._keys"
-    [long-press]="key.longPress"
-    (longPress)="view._key(key.txt)"
-    [colspan]="key.no != null || key.txt != null ? 2 : 1"
-    [rowspan]="key.no != null || key.txt != null ? 1 : 4"
-  >
-    <div class="cell-wrapper">
-      <div class="row1">{{key.no}}</div>
-      <div [innerHTML]="key.txt | asHtml" class="row2"></div>
-    </div>
-  </mat-grid-tile>
+    (click)="view._key(key.no)">
+    <div class="row1" [long-press]="key.longPress" (longPress)="view._key(key.txt)">{{key.no}}</div>
+    <div class="row2" [innerHTML]="key.txt | asHtml"></div>
+  </div>
+  <div class="key">
+    <dav-button icon="fa fa-phone" styleClass="p-button-lg p-button-rounded" (notify)="view._dial()"></dav-button>
+  </div>
+</div>
+<!--mat-grid-list cols="7" rowHeight="16%">
   <mat-grid-tile colspan="7" rowspan="1">
     <button (click)="view._dial()" mat-fab color="primary"><mat-icon>local_phone</mat-icon></button>
   </mat-grid-tile>
-</mat-grid-list>
+</mat-grid-list-->

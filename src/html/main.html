@@ -1,8 +1,7 @@
 <div class="content">
   <p-sidebar [style]="{width: '80%'}" [(visible)]="view._sidebar" baseZIndex="10000" position="right">
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: '', icon: 'fa fa-home', label: 'Home'}}"></ng-container>
-      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'add-server', icon: 'fa fa-laptop', label: 'Server settings'}}"></ng-container>
-      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'settings', icon: 'fa fa-cog', label: 'Application settings'}}"></ng-container>
+      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'settings', icon: 'fa fa-cog', label: 'Settings'}}"></ng-container>
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'history', icon: 'fa fa-history', label: 'History and call log'}}"></ng-container>
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'dial', icon: 'fa fa-phone', label: 'Dialpad'}}"></ng-container>
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'details/new', icon: 'fa fa-user-plus', label: 'Add a new contact'}}"></ng-container>
@@ -14,7 +13,7 @@
 
 <ng-template #nav let-context>
   <div class="p-col-12">
-    <dav-button (notify)="view._nav(context.link)" [icon]="context.icon" [label]="context.label"></dav-button>
+    <dav-button styleClass="p-button-no-hover" (notify)="view._nav(context.link)" [icon]="context.icon" [label]="context.label"></dav-button>
   </div>
 </ng-template>
 

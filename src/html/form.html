@@ -1,11 +1,14 @@
-<div *ngIf="view._selector != 'dav-single-binary'" class="flex" [ngClass]="{'title-margin': !readOnly && (view._selector == 'dav-structured')}">
+<div
+  *ngIf="view._selector != 'dav-single-binary' && view._selector != 'dav-single-input'"
+  class="flex"
+  [ngClass]="{'margin': !readOnly && (view._selector == 'dav-structured')}">
   <div class="title{{readOnly ? ' title--ro' : ''}}">{{view.metadata | fieldTitle}}</div>
   <div *ngIf="view._selector | hasAdd:readOnly" class="add"><dav-button (notify)="view._add()" icon="fa fa-plus"></dav-button></div>
 </div>
 <span *ngIf="view._selector == 'dav-single-choice'">
   <ng-container [ngTemplateOutlet]="readOnly ? ro : edit" [ngTemplateOutletContext]="{$implicit: {value: (view.metadata | optionValue:view.metadata?.value)}}"></ng-container>
   <ng-template #edit>
-    <ng-container *ngIf="view.metadata?.options.length > 2; then editSelect else editRadio"></ng-container>
+    <ng-container [ngTemplateOutlet]="editChoice" [ngTemplateOutletContext]="{$implicit: view.metadata?.options.length <= 2}"></ng-container>
   </ng-template>
 </span>
 
@@ -26,27 +29,21 @@
 </span>
 
 <span *ngIf="view._selector == 'dav-structured-multiple'">
-  <ng-container [ngTemplateOutlet]="readOnly ? roStructuredMultiple : editStructuredMultiple"></ng-container>
+  <ng-container
+    [ngTemplateOutlet]="readOnly ? roMultiple : editStructuredMultiple"
+    [ngTemplateOutletContext]="{$implicit: readOnly ? view.metadata?.value : view.metadata?.values}"></ng-container>
 </span>
 
 <span *ngIf="view._selector == 'dav-single-binary'">
   <ng-container [ngTemplateOutlet]="binary"></ng-container>
 </span>
 
-<ng-template #confirm let-value>
-  <mat-form-field class="max-width">
-    <mat-label>Please choose:</mat-label>
-    <input matInput [(ngModel)]="view._newType" />
-  </mat-form-field>
-  <button (click)="view._doAdd(value)" mat-button class="max-width">OK</button>
-</ng-template>
-
-<ng-template #photoAction>
-  <mat-radio-group style="flex-direction: column; display: flex">
-    <mat-radio-button class="radio" (click)="view._choose()" [value]="false" style="margin-bottom: 10px;">Choose photo</mat-radio-button>
-    <mat-radio-button class="radio" (click)="view._remove()" [value]="false">Remove photo</mat-radio-button>
-  </mat-radio-group>
-</ng-template>
+<p-dialog [focusOnShow]="true" header="Please select" [(visible)]="view._confirm" [modal]="true">
+  <dav-input [(model)]="view._newType"></dav-input>
+  <ng-template pTemplate="footer">
+    <dav-button icon="fa fa-check" label="Ok" (click)="view._doAdd()"></dav-button>
+  </ng-template>
+</p-dialog>
 
 <ng-template #editMultiple>
   <div class="flex" *ngFor="let value of view.metadata?.values; let i = index">
@@ -73,40 +70,28 @@
 </ng-template>
 
 <ng-template #editInput>
-  <mat-form-field>
-    <mat-label>{{view.metadata?.label}}</mat-label>
-    <input matInput [type]="inputType || 'text'" [(ngModel)]="view.metadata.value"/>
-  </mat-form-field>
+  <div class="input"><dav-input [(model)]="view.metadata.value" [label]="view.metadata?.label"></dav-input></div>
 </ng-template>
 
-<ng-template #editRadio>
-  <mat-form-field floatLabel="always">
-    <mat-label [id]="view._uid">{{view.metadata?.label}}</mat-label>
-    <input matInput style="display: none" type="text"/>
-    <mat-radio-group [(ngModel)]="view.metadata.value">
-      <mat-radio-button [checked]="b.key == view.metadata?.value" *ngFor="let b of view.metadata?.options" [value]="b.key">{{b.label}}</mat-radio-button>
-    </mat-radio-group>
-  </mat-form-field>
-</ng-template>
-<ng-template #editSelect>
-  <mat-form-field>
-    <mat-label>{{view.metadata?.label}}</mat-label>
-    <select matNativeControl [(ngModel)]="view.metadata.value">
-      <option *ngFor="let b of view.metadata?.options" [selected]="b.key == view.metadata?.value" [value]="b.key">{{b.label}}</option>
-    </select>
-  </mat-form-field>
+<ng-template #editChoice let-radio>
+  <dav-dropdown
+    [asRadio]="radio"
+    [showClear]="true"
+    [(model)]="view.metadata.value"
+    [isPrimitive]="true"
+    [options]="view.metadata?.options | toValueLabel"
+    >
+  </dav-dropdown>
 </ng-template>
 
-<ng-template #editStructuredMultiple>
-  <mat-chip (click)="view._add()" color="primary" selected>Add {{view.metadata?.label}}</mat-chip>
-  <table class="structured-multiple">
-    <tr *ngFor="let value of view.metadata?.values">
-      <td>
-        <ng-container [ngTemplateOutlet]="typesSelect" [ngTemplateOutletContext]="{$implicit: value}"></ng-container>
-        <ng-container [ngTemplateOutlet]="editStructured" [ngTemplateOutletContext]="{$implicit: value.value}"></ng-container>
-      </td>
-    </tr>
-  </table>
+<ng-template #editStructuredMultiple let-values>
+  <div *ngFor="let value of values">
+    <div class="flex margin">
+      <div class="col1"><ng-container [ngTemplateOutlet]="typesSelect" [ngTemplateOutletContext]="{$implicit: value}"></ng-container></div>
+      <div class="col2"><dav-button (notify)="view._remove(value)" icon="fa fa-times"></dav-button></div>
+    </div>
+    <ng-container [ngTemplateOutlet]="editStructured" [ngTemplateOutletContext]="{$implicit: value.value}"></ng-container>
+  </div>
 </ng-template>
 
 <ng-template #editStructured let-values>
@@ -114,12 +99,6 @@
     <div class="p-field" *ngFor="let value of values; let i = index">
       <dav-input [(model)]="value.value" [label]="value.label"></dav-input>
     </div>
-  </div>
-</ng-template>
-
-<ng-template #roStructuredMultiple>
-  <div class="ro flex flex--column" *ngFor="let value of view.metadata?.values">
-    <ng-container [ngTemplateOutlet]="roMultipleValues" [ngTemplateOutletContext]="{$implicit: value}"></ng-container>
   </div>
 </ng-template>
 
@@ -138,7 +117,7 @@
 
 <ng-template #tagsRo>
   <div class="ro">
-    <div class="flex p-col-12">{{context?.value || view.metadata?.value}}</div>
+    <div class="flex p-col-12">{{view.metadata?.value}}</div>
   </div>
 </ng-template>
 

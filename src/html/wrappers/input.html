@@ -3,9 +3,9 @@
   <input 
     (keyup)="keyup.emit($event)"
     #input
-    [type]="type" [id]="id" pInputText
+    [type]="type" [id]="view.id" pInputText
     [ngModel]="model" (ngModelChange)="modelChange.emit($event)"
     [placeholder]="isFloatLabel ? '' : label"
     [ngClass]="{'p-invalid': validator != 'none' && !isValid}"/>
-  <label *ngIf="isFloatLabel" [for]="id">{{label}}</label>
+  <label *ngIf="isFloatLabel" [for]="view.id">{{label}}</label>
 </span>

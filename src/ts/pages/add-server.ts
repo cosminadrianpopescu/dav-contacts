@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { BaseComponent } from '../base';
-import {Server, SyncType, ServerSync, to, LabelValue} from '../models';
+import {Component} from '@angular/core';
+import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
-import {Dav} from '../services/dav';
+import {Server, ServerSync, SyncType, to} from '../models';
 import {Nextcloud} from '../nextcloud/nextcloud';
+import {Dav} from '../services/dav';
 import {Store} from '../services/store';
 
 @Component({
@@ -16,11 +16,6 @@ export class AddServer extends BaseComponent {
   @NgInject(Nextcloud) private _nc: Nextcloud;
   @NgInject(Store) private _store: Store;
   private _model: Server = new Server();
-  protected _options: Array<LabelValue> = [
-    {value: SyncType.MANUAL, label: 'Manual'},
-    {value: SyncType.INTERVAL, label: 'At an interval'},
-    {value: SyncType.ON_START, label: 'On application start'},
-  ];
 
   @NgCycle('init')
   protected async _initMe() {

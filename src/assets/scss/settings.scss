@@ -1,30 +1,40 @@
-dav-settings {
-  dav-checkbox-group {
-    width: 100%;
-  }
+.p-shadow-1 {
+  padding: 1rem;
+}
 
-  mat-list-item {
-    margin-bottom: 10px;
-    overflow: hidden;
-    height: auto !important;
-  }
+p-radioButton, p-checkbox {
+  margin-right: 0.5rem;
+}
 
-  .wrapper {
-    .mat-list-item-content {
-      flex-direction: column !important;
-    }
-  }
+.input-flex {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
 
-  .radio-group {
-    display: flex;
-    flex-direction: column;
-  }
+dav-input {
+  width: 100%;
+}
 
-  mat-radio-button {
-    margin: 5px;
-  }
+.flex {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: var(--font-family);
+  color: var(--text-color);
 
-  label, mat-radio-group {
-    width: 100%;
-  }
+}
+
+.blue {
+  color: var(--primary-color);
+}
+
+.flex label, .full {
+  display: flex;
+  flex: 1;
+}
+
+.flex[hidden], .input-flex[hidden] {
+  display: none !important;
 }

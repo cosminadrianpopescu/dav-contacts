@@ -1,5 +1,6 @@
-<span class="p-float-label">
+<span class="p-float-label" *ngIf="!asRadio">
   <p-dropdown
+    [showClear]="showClear"
     [autoDisplayFirst]="false"
     [inputId]="id"
     [disabled]="disabled"
@@ -10,3 +11,10 @@
     (ngModelChange)="view._modelChange($event)"></p-dropdown>
   <label [for]="id">{{label}}</label>
 </span>
+
+<div *ngIf="asRadio" class="flex" [ngClass]="{'flex--column': vertical}">
+  <div *ngFor="let option of options" class="option">
+    <p-radioButton inputId="option-{{option.value}}" [name]="id" [value]="option" [ngModel]="view._model" (ngModelChange)="view._modelChange($event)"></p-radioButton>
+    <label for="option-{{option.value}}">{{option.label}}</label>
+  </div>
+</div>

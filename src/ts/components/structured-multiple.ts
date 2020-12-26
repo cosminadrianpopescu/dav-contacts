@@ -11,8 +11,4 @@ export class StructuredMultiple extends MultipleText {
   protected _add() {
     this.metadata.values.push(VCardParser.newMultipleStructured(this.vcardId));
   }
-
-  private _click(x) {
-    console.log('x is', x);
-  }
 }

@@ -1,9 +1,8 @@
-import { Injectable, Type } from '@angular/core';
-import { Plugins } from '@capacitor/core';
-import { BaseClass } from '../base';
-import {ModelFactory, Server, AddressBook, ClickAction, CallType, SelectedTab, SortType, ShownField} from '../models';
-import {History} from '../models';
+import {Injectable, Type} from '@angular/core';
+import {Plugins} from '@capacitor/core';
+import {BaseClass} from '../base';
 import {VCardParser} from '../lib/src';
+import {AddressBook, CallType, ClickAction, Contact, History, ModelFactory, SelectedTab, Server, ShownField, SortType} from '../models';
 
 const { Storage } = Plugins;
 const SERVER_KEY = 'server';
@@ -132,5 +131,32 @@ export class Store extends BaseClass {
 
   public async setVisibleTabs(value: Array<SelectedTab>) {
     return this.save(VISIBLE_TABS_KEY, value);
+  }
+
+  public static contactROCards(c: Contact, fields: Array<ShownField>): Array<ShownField> {
+    let _fields = fields.filter(f => {
+      const m = c.metadata.find(m => m.vcardId == f.vcardId);
+      return m && (m.value || m.values);
+    });
+    const p = (f: ShownField) => ['structured-multiple', 'single-input', 'single-choice'].indexOf(f.type) != -1;
+    if (_fields.filter(p).length == 0) {
+      return _fields;
+    }
+
+    const a1 = _fields.filter(f => !p(f));
+    const a2 = _fields
+      .filter(f => f.type == 'structured-multiple')
+      .map(f => ({f: f, m: c.metadata.find(m => m.vcardId == f.vcardId)}))
+      .filter(obj => !!obj.m)
+      .map(obj => obj.m.values.map(o => ({f: obj.f, v: o})))
+      .reduce((acc, v) => acc.concat(v), [])
+      .map(obj => <ShownField>{type: 'structured-multiple', vcardId: `${obj.f.vcardId}#${obj.v.type}`});
+
+    const inputs = _fields.filter(f => f.type == 'single-input' || f.type == 'single-choice');
+
+    const a3 = inputs
+      .reduce((acc, _v) => acc, <ShownField>{type: 'structured', vcardId: inputs.reduce((acc, v) => `${acc}:${v.vcardId}`, '')});
+
+    return a1.concat(a2).concat(a3);
   }
 }

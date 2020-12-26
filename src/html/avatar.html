@@ -1,6 +1,8 @@
 <div class="box{{doubleSize ? ' double' : ''}}">
-  <span *ngIf="!(contact | contactPhoto)" [style.background-color]="view._color" class="color-circle">
-    <span class="text">{{view._text}}</span>
-  </span>
-  <img *ngIf="contact | contactPhoto" [src]="contact | contactPhoto" alt=""/>
+  <div class="flex" [style.background-color]="view._color">
+    <div *ngIf="!(contact | contactPhoto)">
+      <span class="text">{{view._text}}</span>
+    </div>
+    <img *ngIf="contact | contactPhoto" [src]="contact | contactPhoto" alt=""/>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="p-fluid flex flex--margin" *ngIf="!view._isNew">
+<div class="p-fluid flex flex--margin">
   <dav-single-binary [readOnly]="view._readOnly" [contact]="view._contact" vcardId="PHOTO"></dav-single-binary>
   <div class="filler"></div>
   <dav-button styleClass="p-button-lg" dav-contact-click="call" [who]="view._contact" icon="fa fa-phone"></dav-button>
@@ -43,14 +43,10 @@
     [vcardId]="field.vcardId"></dav-single-choice>
 </p-card>
 
-<ng-template #confirm let-data>
-  <mat-list>
-    <mat-list-item>
-      <mat-label>Are you sure you want to delete the contact</mat-label>
-    </mat-list-item>
-    <mat-list-item>
-      <button (click)="view._doDelete(data.ref)" mat-button>Sure</button>
-      <button (click)="data.ref.close()" mat-button>Not quite</button>
-    </mat-list-item>
-  </mat-list>
-</ng-template>
+<p-dialog header="Confirm" [(visible)]="view._confirmDel" [modal]="true">
+  <p>Are you sure you want to delete the contact?</p>
+  <ng-template pTemplate="footer">
+    <dav-button icon="fa fa-times" label="Not quite" (notify)="view._confirmDel = false"></dav-button>
+    <dav-button icon="fa fa-check" label="Sure" (notify)="view._doDelete()"></dav-button>
+  </ng-template>
+</p-dialog>

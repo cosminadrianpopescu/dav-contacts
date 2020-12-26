@@ -27,20 +27,27 @@ export class LongPress extends BaseComponent {
     });
   }
 
+  @HostListener('click', ['$event'])
+  protected _click(ev: MouseEvent) {
+    if (!this.value || LongPress.inPress) {
+      return ;
+    }
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    ev.stopPropagation();
+  }
+
   @HostListener('touchend', ['$event'])
   @HostListener('mouseup', ['$event'])
   @HostListener('mouseleave', ['$event'])
   protected _endPress(ev: MouseEvent) {
-    if (!this.value || !LongPress.inPress) {
+    if (!this.value) {
       return ;
     }
-    LongPress.inPress = false;
     if (this._s) {
       this._s.unsubscribe();
       return ;
     }
-    ev.stopPropagation();
-    ev.preventDefault();
-    ev.stopImmediatePropagation();
   }
 }

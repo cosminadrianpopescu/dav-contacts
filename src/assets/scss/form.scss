@@ -33,8 +33,13 @@
   }
 }
 
-.title-margin {
+.margin {
   margin-bottom: 1.5rem;
+  display: flex;
+  &--title {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
 }
 
 .type {
@@ -51,6 +56,18 @@
   width: 100%;
 }
 
-p-chips {
+p-chips, .full {
   width: 100%;
+}
+
+.col1 {
+  display: flex;
+  flex: 1;
+  dav-dropdown {
+    width: 100%;
+  }
+}
+
+.input {
+  margin-top: 0.5rem;
 }

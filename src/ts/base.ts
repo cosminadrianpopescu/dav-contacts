@@ -1,13 +1,13 @@
 import {ApplicationRef, ComponentFactoryResolver, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Injectable, Injector, Input, Provider, SimpleChanges, TemplateRef} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
+import {MessageService} from 'primeng/api';
 import {Observable, Subscription} from 'rxjs';
 import {Loading} from './components/loading';
 import {CycleType, METADATA, NgCycle, NgInject} from './decorators';
 import {VCardMetadata, VCardParser} from './lib/src';
-import {Contact} from './models';
+import {Contact, ModelFactory, STRUCTURED} from './models';
 import {Logger, LoggingInstance} from './services/logging';
-import {MessageService} from 'primeng/api';
 
 export class Statics {
   public static injector: Injector;
@@ -181,9 +181,38 @@ export class BaseInputComponent extends BaseComponent {
 export class BaseInputWithMetadata extends BaseInputComponent {
   protected metadata: VCardMetadata;
 
+  private _getContactMetadata(c: Contact, vcardId: string): VCardMetadata {
+    if (!vcardId.match(/[#:]/g)) {
+      return c.metadata.find(m => m.vcardId == vcardId);
+    }
+
+    if (vcardId.match(/#/)) {
+      const [id, type] = vcardId.split('#');
+
+      let result = ModelFactory.instance(c.metadata.find(m => m.vcardId == id), VCardMetadata) as VCardMetadata;
+      const values = result.values.find(v => v.type == type);
+
+      result.label = `${result.label} ${type}`;
+      result.value = values.value;
+      result.values = null;
+
+      return result;
+    }
+
+    const parts = vcardId.split(':');
+    console.log('card id is', vcardId);
+
+    return ModelFactory.instance(<VCardMetadata>{
+      vcardId: `X-${STRUCTURED}`, label: 'Misc',
+      value: c.metadata
+        .filter(m => parts.indexOf(m.vcardId) != -1)
+        .map(m => ({label: m.label, value: m.value}))
+    }, VCardMetadata) as VCardMetadata;
+  }
+
   @NgCycle('init')
   private __initMe__() {
-    this.metadata = this.contact.metadata.find(m => m.vcardId == this.vcardId) || null;
+    this.metadata = this._getContactMetadata(this.contact, this.vcardId) || null;
     if (!this.metadata) {
       this.metadata = VCardParser.newMetadata(this.vcardId);
       this.contact.metadata.push(this.metadata);

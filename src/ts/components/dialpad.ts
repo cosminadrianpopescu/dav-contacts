@@ -1,11 +1,10 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {BaseComponent} from '../base';
 
 @Component({
   selector: 'dav-dialpad',
   templateUrl: '../../html/dialpad.html',
   styleUrls: ['../../assets/scss/dialpad.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Dialpad extends BaseComponent {
   @Output() public dial: EventEmitter<string> = new EventEmitter<string>();
@@ -26,7 +25,6 @@ export class Dialpad extends BaseComponent {
     {no: 1, txt: '&nbsp;'},
     {no: 2, txt: 'ABC'},
     {no: 3, txt: 'DEF'},
-    {no: null, txt: null},
     {no: 4, txt: 'GHI'},
     {no: 5, txt: 'JKL'},
     {no: 6, txt: 'MNO'},

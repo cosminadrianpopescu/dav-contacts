@@ -1,5 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Component} from '@angular/core';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
 import {Contact, ModelFactory, ShownField} from '../models';
@@ -16,15 +15,24 @@ export class Details extends BaseComponent {
   @NgInject(Navigation) private _nav: Navigation;
   @NgInject(Dav) private _dav: Dav;
   @NgInject(Store) private _store: Store;
-  @NgInject(MatDialog) private _modal: MatDialog;
-
-  @ViewChild('confirm') private _tpl: TemplateRef<any>;
 
   private _contact: Contact;
   protected _readOnly = true;
   protected _fields: Array<ShownField> = [];
   private _id: string;
+  protected _confirmDel: boolean = false;
   protected _isNew: boolean = false;
+
+  private async _setFields(ro: boolean) {
+    this._readOnly = ro;
+    this._fields = await this._store.getShownFields();
+    console.log('fields are', this._fields, this._readOnly);
+    if (!this._readOnly) {
+      return ;
+    }
+
+    this._fields = Store.contactROCards(this._contact, this._fields);
+  }
 
   @NgCycle('init')
   protected async _initMe() {
@@ -33,13 +41,11 @@ export class Details extends BaseComponent {
       this._initContact();
 
       if (this._router.url.match(/edit/)) {
-        this._readOnly = false;
+        this._setFields(false);
       }
     });
 
     this.connect(this._nav.connectToRoute('number'), number => this._initContact(number));
-
-    this._fields = await this._store.getShownFields();
   }
 
   private _initContact(number?: string) {
@@ -47,7 +53,10 @@ export class Details extends BaseComponent {
     if (!c) {
       c = ModelFactory.instance(<Contact>{metadata: []}, Contact) as Contact;
       this._isNew = true;
-      this._readOnly = false;
+      this._setFields(false);
+    }
+    else {
+      this._setFields(true);
     }
     this._contact = ModelFactory.instance(JSON.parse(JSON.stringify(c)), Contact) as Contact;
     if (number) {
@@ -56,7 +65,7 @@ export class Details extends BaseComponent {
   }
 
   protected _edit() {
-    this._readOnly = false;
+    this._setFields(false);
   }
 
   protected _cancel() {
@@ -64,7 +73,7 @@ export class Details extends BaseComponent {
       this.navigate('');
       return ;
     }
-    this._readOnly = true;
+    this._setFields(true);
     this._initContact();
   }
 
@@ -79,11 +88,11 @@ export class Details extends BaseComponent {
     }
     await this._dav.update(this._contact);
     await this.hideLoading();
-    this._readOnly = true;
+    this._setFields(true);
   }
 
-  protected async _doDelete(ref: MatDialogRef<any, any>) {
-    ref.close();
+  protected async _doDelete() {
+    this._confirmDel = false;
     await this.showLoading();
     await this._dav.delete(this._contact);
     await this.hideLoading();
@@ -91,8 +100,6 @@ export class Details extends BaseComponent {
   }
 
   protected _delete() {
-    const data = {ref: null}
-    const ref = this._modal.open(this._tpl, {data: data});
-    data.ref = ref;
+    this._confirmDel = true;
   }
 }

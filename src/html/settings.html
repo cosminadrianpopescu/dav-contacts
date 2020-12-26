@@ -1,34 +1,54 @@
-<mat-list>
-  <mat-list-item class="wrapper">
-    <label id="click-action">Click action (what happens when you click a contact)</label>
-    <mat-radio-group name="click-action" aria-labelledby="click-action" class="radio-group" [(ngModel)]="view._model.action">
-      <mat-radio-button value="call">Call contact</mat-radio-button>
-      <mat-radio-button value="edit">Edit contact</mat-radio-button>
-      <mat-radio-button value="view">View contact details</mat-radio-button>
-    </mat-radio-group>
-  </mat-list-item>
-  <mat-list-item class="wrapper">
-    <label id="call-type">Intent to trigger when calling a contact</label>
-    <mat-radio-group name="call-type" aria-labelledby="call-type" class="radio-group" [(ngModel)]="view._model.intent">
-      <mat-radio-button value="CALL">Call intent</mat-radio-button>
-      <mat-radio-button value="DIAL">Dial intent</mat-radio-button>
-    </mat-radio-group>
-  </mat-list-item>
-  <mat-list-item>
-    <mat-slide-toggle [(ngModel)]="view._model.showFav">Use custom favourites</mat-slide-toggle>
-  </mat-list-item>
-  <mat-list-item class="wrapper">
-    <label id="default-tab">Default selected tab</label>
-    <mat-radio-group aria-labelledby="default-tab" class="radio-group" [(ngModel)]="view._model.defaultTab">
-      <mat-radio-button value="0">Favourites</mat-radio-button>
-      <mat-radio-button value="1">Contacts list</mat-radio-button>
-      <mat-radio-button value="2">Tags</mat-radio-button>
-    </mat-radio-group>
-  </mat-list-item>
-  <mat-list-item class="wrapper">
-    <dav-checkbox-group label="Visible tabs" [options]="view._tabsOptions" [(model)]="view._model.visibleTabs"></dav-checkbox-group>
-  </mat-list-item>
-  <mat-list-item class="wrapper">
-    <dav-checkbox-group label="Visible fields" [options]="view._fieldsOptions" [(model)]="view._model.visibleFields"></dav-checkbox-group>
-  </mat-list-item>
-</mat-list>
+<dav-panel
+  [isHeaderBold]="true"
+  header="Server settings {{(view._serverSet$ | async) ? '(click the check icon to change)' : '(click the sign icon to login)'}}"
+  [collapsed]="view._serverSet$ | async">
+  <div *ngIf="view._server" class="p-shadow-1 input-flex" [hidden]="(view._serverSet$ | async) && view._serverRo">
+    <dav-input label="Server url" [(model)]="view._server.url"></dav-input>
+    <dav-button (notify)="view._addServer()" icon="fa fa-sign-in"></dav-button>
+  </div>
+  <div *ngIf="view._server" class="p-shadow-1 input-flex" [hidden]="!(view._serverSet$ | async) || !view._serverRo">
+    <span class="full">{{view._server.url}}</span>
+    <i (click)="view._changeServer()" class="fa fa-check blue"></i>
+  </div>
+</dav-panel>
+<dav-panel [isHeaderBold]="true" header="Click action (what happens when you click a contact)" [disabled]="!(view._serverSet$ | async)">
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 'call', label: 'Call contact', model: 'action'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 'edit', label: 'Edit contact', model: 'action'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 'view', label: 'View contact', model: 'action'}}"></ng-container>
+</dav-panel>
+<dav-panel [isHeaderBold]="true" header="Intent to trigger when calling a contact" [disabled]="!(view._serverSet$ | async)">
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 'CALL', label: 'Call intent', model: 'intent'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 'DIAL', label: 'Dial intent', model: 'intent'}}"></ng-container>
+</dav-panel>
+<dav-panel [isHeaderBold]="true" header="Default selected tab" [disabled]="!(view._serverSet$ | async)">
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 0, label: 'Favourites', model: 'defaultTab'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 1, label: 'Contacts', model: 'defaultTab'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="radio" [ngTemplateOutletContext]="{$implicit: {value: 2, label: 'Groups', model: 'defaultTab'}}"></ng-container>
+</dav-panel>
+<dav-panel [isHeaderBold]="true" header="Visible tabs" [disabled]="!(view._serverSet$ | async)">
+  <ng-container [ngTemplateOutlet]="checkbox" [ngTemplateOutletContext]="{$implicit: {value: 0, label: 'Favourites', model: 'visibleTabs'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="checkbox" [ngTemplateOutletContext]="{$implicit: {value: 1, label: 'Contacts', model: 'visibleTabs'}}"></ng-container>
+  <ng-container [ngTemplateOutlet]="checkbox" [ngTemplateOutletContext]="{$implicit: {value: 2, label: 'Groups', model: 'visibleTabs'}}"></ng-container>
+</dav-panel>
+<dav-panel [isHeaderBold]="true" header="Visible fields" [disabled]="!(view._serverSet$ | async)">
+  <ng-container
+    *ngFor="let field of view._fieldsOptions"
+    [ngTemplateOutlet]="checkbox"
+    [ngTemplateOutletContext]="{$implicit: {value: field.key, label: field.value, model: 'visibleFields'}}"></ng-container>
+</dav-panel>
+<div class="flex p-shadow-1" [hidden]="!(view._serverSet$ | async)">
+  <label for="check-showFav">Use custom favourites</label>
+  <p-inputSwitch [(ngModel)]="view._model.showFav" inputId="check-showFav"></p-inputSwitch>
+</div>
+<ng-template #radio let-ctx>
+  <div class="p-shadow-1">
+    <p-radioButton [value]="ctx.value" [(ngModel)]="view._model[ctx.model]" inputId="radio-{{ctx.value}}" name="radio"></p-radioButton>
+    <label for="radio-{{ctx.value}}">{{ctx.label}}</label>
+  </div>
+</ng-template>
+<ng-template #checkbox let-ctx>
+  <div class="p-shadow-1">
+    <p-checkbox [value]="ctx.value" [(ngModel)]="view._model[ctx.model]" inputId="checkbox-{{ctx.value}}" name="radio"></p-checkbox>
+    <label for="checkbox-{{ctx.value}}">{{ctx.label}}</label>
+  </div>
+</ng-template>

@@ -1,8 +1,11 @@
-import {Component, KeyValueDiffer, KeyValueDiffers, ViewEncapsulation} from '@angular/core';
+import {Component, KeyValueDiffer, KeyValueDiffers} from '@angular/core';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
-import {CallType, ClickAction, KeyValue, SelectedTab} from '../models';
+import {CallType, ClickAction, KeyValue, SelectedTab, Server, to} from '../models';
 import {Store} from '../services/store';
+import {ReplaySubject} from 'rxjs';
+import {Nextcloud} from '../nextcloud/nextcloud';
+import {Dav} from '../services/dav';
 
 class Model {
   action: ClickAction;
@@ -17,12 +20,16 @@ class Model {
   selector: 'dav-settings',
   templateUrl: '../../html/settings.html',
   styleUrls: ['../../assets/scss/settings.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class Settings extends BaseComponent {
   @NgInject(Store) private _store: Store;
   @NgInject(KeyValueDiffers) private _diff: KeyValueDiffers;
+  @NgInject(Nextcloud) private _nc: Nextcloud;
+  @NgInject(Dav) private _dav: Dav;
   private _model: Model = new Model();
+  protected _server: Server = new Server();
+  protected _serverSet$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+  protected _serverRo: boolean = true;
   private _diffRecorder: KeyValueDiffer<string, string | boolean>;
   protected _tabsOptions: Array<KeyValue> = [
     {key: SelectedTab.FAVORITES.toString(), value: 'Favourites'},
@@ -51,10 +58,17 @@ export class Settings extends BaseComponent {
     {key: 'GENDER', value: 'Gender'},
     {key: 'LANG', value: 'Languages'},
     {key: 'RELATED', value: 'Related'},
-  ]
+    {key: 'ADR', value: 'Address'},
+  ];
+
+  private _serverSet() {
+    this._serverSet$.next(!!this._server.pass && !!this._server.pass);
+  }
 
   @NgCycle('init')
   protected async _initMe() {
+    this._server = (await this._store.getServer()) || new Server();
+    this._serverSet();
     this._store.getCallType().then(result => this._model.intent = result);
     this._store.getAction().then(result => this._model.action = result);
     this._store.getShowFav().then(result => this._model.showFav = result);
@@ -90,5 +104,24 @@ export class Settings extends BaseComponent {
     if (diff) {
       this._setModel();
     }
+  }
+
+  protected async _addServer() {
+    await this.showLoading();
+    const [err, result] = await to(this._nc.login(this._server.url));
+    const msg = err ? err.message : 'You have been authenticated with nextcloud';
+    await this.hideLoading();
+    this.alert(msg);
+    if (result) {
+      this._server.url = `${this._server.url}/remote.php/dav/`;
+      this._server.user = result.loginName;
+      this._server.pass = result.appPassword;
+      await this._dav.addServer(this._server);
+      this._serverSet();
+    }
+  }
+
+  protected _changeServer() {
+    this._serverRo = false;
   }
 }

@@ -12,7 +12,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatListModule} from '@angular/material/list';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatRadioModule} from '@angular/material/radio';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSelectModule} from '@angular/material/select';
 import {BrowserModule} from '@angular/platform-browser';
@@ -39,7 +38,6 @@ import {Toolbar} from '../components/toolbar';
 import {CallLog2History} from '../convertors/call-log-to-history';
 import {ContactClick} from '../directives/contact-click';
 import {LongPress} from '../directives/long-press';
-import {AddServer} from '../pages/add-server';
 import {Dialer} from '../pages/dialer';
 import {Home} from '../pages/home';
 import {Main as MainComponent} from '../pages/main';
@@ -65,7 +63,6 @@ import {Details} from '../pages/details';
 import { Settings } from '../pages/settings';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { CheckboxGroup } from '../components/checkbox-group';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import { Swipe } from '../directives/swipe';
 import {Nextcloud} from '../nextcloud/nextcloud';
 import {Webdav} from '../nextcloud/webdav';
@@ -87,6 +84,11 @@ import {DropdownModule, Dropdown} from 'primeng/dropdown';
 import {Dropdown as DropdownWidget} from '../components/wrappers/dropdown';
 import {CardModule} from 'primeng/card';
 import {ChipsModule} from 'primeng/chips';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {DialogModule} from 'primeng/dialog';
+import {CheckboxModule} from 'primeng/checkbox';
+import {InputSwitchModule} from 'primeng/inputswitch';
+import {AgVirtualScrollModule} from 'ag-virtual-scroll';
 
 Dropdown.prototype.getOptionValue = function(option: any) {
   return option;
@@ -96,14 +98,14 @@ Dropdown.prototype.getOptionValue = function(option: any) {
   declarations: [
     MainComponent, Home, Toolbar, pipes.RouteData, SideMenu, Contact,
     pipes.ContactName, pipes.ContactPhone, pipes.FilteredContacts, pipes.ContactPhoto,
-    Dialer, AddServer, Loading, Dialpad, pipes.AsHtml, LongPress, HistoryPage,
+    Dialer, Loading, Dialpad, pipes.AsHtml, LongPress, HistoryPage,
     ContactsList, NumberSelector, ContactClick, pipes.FilteringCallableItem,
     pipes.ContactsForTag, pipes.IsFavorite, Avatar, Tiles, pipes.ContactInitials,
     pipes.ContactColor, pipes.HighlightedName, pipes.ContactTags, Groups,
     Playground, SingleInput, SingleChoice, MultipleText, pipes.OptionValue, Structured,
     StructuredMultiple, pipes.DisplayableValues, pipes.PhoneNumber, Binary, Details,
     Settings, CheckboxGroup, pipes.IsChecked, Swipe, pipes.FieldTitle, pipes.HasAdd,
-    pipes.AsOptions,
+    pipes.AsOptions, pipes.ToValueLabel, pipes.IsCollapsed,
 
     Button, TextInput, Panel, DropdownWidget,
   ],
@@ -115,13 +117,14 @@ Dropdown.prototype.getOptionValue = function(option: any) {
     MatButtonModule, MatIconModule, 
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, useHash: true }),
     BrowserAnimationsModule, NoKeyboardModule, MatListModule, MatMenuModule,
-    MatBottomSheetModule, MatRadioModule, 
+    MatBottomSheetModule, 
     ScrollingModule, MatDialogModule, MatBadgeModule, 
-    MatSlideToggleModule, MatCheckboxModule,
+    MatSlideToggleModule, 
 
     ToastModule, SidebarModule, RippleModule, ButtonModule, InputTextModule,
     ToolbarModule, TabViewModule, PanelModule, OverlayPanelModule, DropdownModule,
-    CardModule, ChipsModule,
+    CardModule, ChipsModule, RadioButtonModule, DialogModule, CheckboxModule,
+    InputSwitchModule, AgVirtualScrollModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

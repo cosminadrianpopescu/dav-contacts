@@ -71,7 +71,7 @@ export class Dav extends BaseClass {
   public async init() {
     this._server = await this._store.getServer();
     if (!this._server) {
-      this._router.navigateByUrl('add-server');
+      this._router.navigateByUrl('settings');
       return ;
     }
     this.addressBook = await this._store.getAddressBook();

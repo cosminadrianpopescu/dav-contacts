@@ -10,9 +10,15 @@
   width: calc(100% - 2rem);
   display: flex;
   justify-content: space-between;
+  pointer-events: none;
+
+  dav-button {
+    pointer-events: all;
+  }
 }
 
 .spacer {
   width: 1.25rem;
   content: ' ';
+  background: none;
 }

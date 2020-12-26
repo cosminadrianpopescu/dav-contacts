@@ -1,10 +1,12 @@
 <div *ngIf="inCard && !compact" class="p-card p-component" dav-contact-click [who]="contact">
-    <ng-container [ngTemplateOutlet]="contactTpl"></ng-container>
+  <ng-container [ngTemplateOutlet]="contactTpl"></ng-container>
 </div>
 
-<ng-container *ngIf="!inCard || compact" [ngTemplateOutlet]="contactTpl"></ng-container>
+<span dav-contact-click [who]="contact" *ngIf="!inCard || compact">
+  <ng-container [ngTemplateOutlet]="contactTpl"></ng-container>
+</span>
 
-<p-overlayPanel #menu appendTo="body">
+<p-overlayPanel #menu appendTo="body" [dismissable]="false">
   <ng-template pTemplate>
     <div class="menu">
       <dav-button icon="fa fa-info" label="View contact details" (notify)="view._edit($event)"></dav-button>
@@ -21,6 +23,6 @@
       <div *ngIf="!compact" class="phone">{{contact | contactPhone}}</div>
     </div>
     <dav-button *ngIf="view._showFav && !compact" icon="fa fa-star{{(contact | isFavorite) ? '' : '-o'}}" (notify)="view._fav($event)"></dav-button>
-    <dav-button *ngIf="!compact" (notify)="view._preventClick($event); menu.toggle($event)" icon="fa fa-ellipsis-v"></dav-button>
+    <dav-button *ngIf="!compact" (notify)="view._menuClick($event, menu)" icon="fa fa-ellipsis-v"></dav-button>
   </div>
 </ng-template>

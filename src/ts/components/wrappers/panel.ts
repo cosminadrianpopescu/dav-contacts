@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewChild, ViewEncapsulation, SimpleChanges} from '@angular/core';
 import {Panel as PanelWidget} from 'primeng/panel';
 import {ReplaySubject} from 'rxjs';
 import {BaseComponent} from '../../base';
@@ -14,18 +14,26 @@ export class Panel extends BaseComponent {
   @Input() public toggleable: boolean = true;
   @Input() public collapsed: boolean = true;
   @Input() public header: string;
+  @Input() public disabled: boolean = false;
+  @Input() public isHeaderBold: boolean = false;
 
   @ViewChild('panel', {static: true}) private _panel: PanelWidget;
-  protected _collapsed$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  public collapsed$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
-  @NgCycle('init')
-  protected _initMe() {
-    this._collapsed$.next(this.collapsed);
+  @NgCycle('change')
+  protected _change(changes: SimpleChanges) {
+    if (!changes || !changes['collapsed']) {
+      return ;
+    }
+    this.collapsed$.next(this.collapsed);
   }
 
   protected _click() {
+    if (this.disabled) {
+      return ;
+    }
     const ev = document.createEvent('MouseEvent');
     this._panel.toggle(ev);
-    this._collapsed$.next(this._panel.collapsed);
+    this.collapsed$.next(this._panel.collapsed);
   }
 }

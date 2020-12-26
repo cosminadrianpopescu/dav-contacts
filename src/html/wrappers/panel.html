@@ -1,9 +1,12 @@
-<p-panel #panel [toggleable]="toggleable" [collapsed]="collapsed">
-  <p-header (click)="view._click()">
+<p-panel #panel [toggleable]="toggleable" [collapsed]="disabled ? true : collapsed">
+  <p-header (click)="view._click()" [ngClass]="{disabled: disabled}">
     <div class="flex">
-      <div class="header">{{header}}</div>
+      <div class="header">
+        <span *ngIf="!isHeaderBold">{{header}}</span>
+        <strong *ngIf="isHeaderBold">{{header}}</strong>
+      </div>
       <div class="header-icon">
-        <dav-button styleClass="p-button-rounded" icon="fa fa-angle-{{(view._collapsed$ | async) ? 'down' : 'up'}}"></dav-button>
+        <dav-button styleClass="p-button-rounded" icon="fa fa-angle-{{(view.collapsed$ | async) ? 'down' : 'up'}}"></dav-button>
       </div>
     </div>
   </p-header>

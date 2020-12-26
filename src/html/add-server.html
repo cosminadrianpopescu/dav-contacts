@@ -11,16 +11,3 @@
   </div>
   <dav-button (notify)="view._add()" label="Login"></dav-button>
 </div>
-<!--mat-form-field appearance="standard">
-  <mat-label>Nextcloud URL</mat-label>
-  <input matInput [ngModel]="view._model?.url" (ngModelChange)="view._model.url = $event"/>
-</mat-form-field>
-<mat-form-field appearance="standard">
-  <mat-label>Synchronization</mat-label>
-  <select matNativeControl [ngModel]="view._model?.sync?.type" (ngModelChange)="view._model.sync.type = $event">
-    <option *ngFor="let option of view._options" [value]="option.key">{{option.value}}</option>
-  </select>
-</mat-form-field>
-<div class="button">
-  <button (click)="view._add()" mat-raised-button color="primary">Login</button>
-</div-->

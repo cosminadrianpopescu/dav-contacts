@@ -17,6 +17,9 @@ export class Dropdown extends BaseComponent {
   @Input() public optionLabel: string = "label";
   @Input() public model: string | LabelValue;
   @Input() public label: string;
+  @Input() public asRadio: boolean = false;
+  @Input() public vertical: boolean = false;
+  @Input() public showClear: boolean = false;
 
   public id: string;
 
@@ -31,15 +34,31 @@ export class Dropdown extends BaseComponent {
 
   @NgCycle('change')
   protected _change(changes: SimpleChanges) {
+    console.log('changes are', changes);
+    if (changes['model'] && this.model) {
+      const option = this.options.find(o => this.isPrimitive ? o.value == this.model : o.value == (this.model as LabelValue).value);
+      console.log('option is', option);
+      if (!option) {
+        this.options.push(this.isPrimitive ? {value: this.model as string, label: this.model as string} : this.model as LabelValue);
+      }
+    }
     if (!this.isPrimitive || !changes['model']) {
       this._model = this.model as LabelValue;
       return ;
     }
 
     this._model = this.options.find(o => o.value == this.model);
+    console.log('model is', this._model, this.model, this.options);
   }
 
   protected _modelChange(x: LabelValue) {
+    console.log('model change', x);
+    if (x == null) {
+      this._model = null;
+      this.modelChange.emit(null);
+      return ;
+    }
+    this._model = this.options.find(o => o.value == x.value)
     if (!this.isPrimitive) {
       this.modelChange.emit(x);
       return ;

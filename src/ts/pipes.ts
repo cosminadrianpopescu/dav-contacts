@@ -3,9 +3,10 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {merge, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BaseClass} from './base';
+import {Panel} from './components/wrappers/panel';
 import {NgInject} from './decorators';
 import {VCardMetadata, VCardStructuredProperty} from './lib/src';
-import {Contact, FilteringItem, History, KeyValue, NO_TAG, LabelValue} from './models';
+import {Contact, FilteringItem, History, KeyValue, LabelValue, NO_TAG} from './models';
 import {Dav} from './services/dav';
 import {Navigation} from './services/navigation';
 import {Search} from './services/search';
@@ -205,8 +206,8 @@ export class OptionValue extends BaseClass {
 
 @Pipe({name: 'displayableValues'})
 export class DisplayableValues extends BaseClass {
-  transform(values: Array<VCardStructuredProperty>): Array<VCardStructuredProperty> {
-    return values.filter(v => !!v.value);
+  transform(values: Array<VCardStructuredProperty> | {type: string, value: Array<VCardStructuredProperty>}): Array<VCardStructuredProperty> {
+    return (Array.isArray(values) ? values : values.value).filter(v => !!v.value);
   }
 }
 
@@ -245,5 +246,19 @@ export class HasAdd {
 export class AsOptions {
   public transform(types: Array<string>): Array<LabelValue> {
     return types.map(t => <LabelValue>{label: t, value: t});
+  }
+}
+
+@Pipe({name: 'toValueLabel'})
+export class ToValueLabel {
+  public transform(options: Array<{key: string, label: string}>): Array<LabelValue> {
+    return options.map(o => <LabelValue>{label: o.label, value: o.key});
+  }
+}
+
+@Pipe({name: 'isCollapsed'})
+export class IsCollapsed {
+  public transform(p: Panel): Observable<boolean> {
+    return merge(of(true), p.collapsed$);
   }
 }

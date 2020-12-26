@@ -46,6 +46,7 @@ const multipleText = {
     'IMPP': 'Instant messenging',
     'URL': 'Websites',
     'RELATED': 'Related',
+    'X-STRUCTURED': 'Misc',
     type: 'multiple-text',
 };
 
@@ -322,9 +323,10 @@ export class VCardParser {
       }, '');
   }
 
-  private static getStructured(id: string, values: Array<VCardStructuredProperty>): string {
-    const key = VCardParser.getKey(id, singleStructured);
-    const parts: Array<string> = singleStructured[key].split(';').splice(1);
+  private static getStructured(id: string, values: Array<VCardStructuredProperty>, isMultiple: boolean = false): string {
+    const x = isMultiple ? multipleStructured : singleStructured;
+    const key = VCardParser.getKey(id, x);
+    const parts: Array<string> = x[key].split(';').splice(1);
     return parts.reduce((acc, _v, idx) => {
       const x = values.find(v => _v.match(new RegExp(`^${v.label}`)));
       const pref = acc + (idx == 0 ? '' : ';');
@@ -364,7 +366,7 @@ export class VCardParser {
         else if (this._isIn(v.vcardId, multipleStructured) && Array.isArray(v.values) && v.values.length > 0) {
           acc += v.values.reduce((acc, v2) => {
             return acc + v.vcardId + (v2.type ? ';TYPE=' + v2.type : '') + ':' +
-              VCardParser.getStructured(v.vcardId, v2.value as Array<VCardStructuredProperty>) + '\n';
+              VCardParser.getStructured(v.vcardId, v2.value as Array<VCardStructuredProperty>, true) + '\n';
           }, '');
         }
         return acc;
