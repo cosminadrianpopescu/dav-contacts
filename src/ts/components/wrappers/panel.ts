@@ -20,6 +20,11 @@ export class Panel extends BaseComponent {
   @ViewChild('panel', {static: true}) private _panel: PanelWidget;
   public collapsed$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
+  @NgCycle('init')
+  protected _initMe() {
+    this.collapsed$.next(this.collapsed);
+  }
+
   @NgCycle('change')
   protected _change(changes: SimpleChanges) {
     if (!changes || !changes['collapsed']) {

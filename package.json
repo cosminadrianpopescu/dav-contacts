@@ -24,6 +24,7 @@
     "@angular/router": "~9.1.6",
     "@capacitor/android": "^2.1.0",
     "@capacitor/core": "2.1.0",
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "@ionic-native/android-permissions": "^5.26.0",
     "@ionic-native/call-log": "^5.26.0",
     "@ionic-native/clipboard": "^5.26.0",

@@ -1,28 +1,30 @@
-import { BaseClass } from '../base';
-import {Injectable, EventEmitter} from '@angular/core';
-import {CallLog as CallLogModel, FilteringEvent, Contact, History, to, NumberDialed, CallType} from '../models';
-import {NgInject} from '../decorators';
-import {Dav} from './dav';
-import {MatBottomSheet} from '@angular/material/bottom-sheet';
-import {NumberSelector} from '../components/number-selector';
-import {take} from 'rxjs/operators';
-import {WebIntent} from '@ionic-native/web-intent/ngx';
-import {Store} from './store';
+import {EventEmitter, Injectable} from '@angular/core';
 import {AndroidPermissions} from '@ionic-native/android-permissions/ngx';
-import {Platform} from '@ionic/angular';
 import {CallLog} from '@ionic-native/call-log/ngx';
+import {WebIntent} from '@ionic-native/web-intent/ngx';
+import {Platform} from '@ionic/angular';
+import {take} from 'rxjs/operators';
+import {BaseClass} from '../base';
+import {NgInject} from '../decorators';
+import {CallLog as CallLogModel, CallType, Contact, FilteringEvent, History, NumberDialed, to, ClickAction} from '../models';
+import {Dav} from './dav';
+import {Store} from './store';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class Dialer extends BaseClass {
   @NgInject(Store) private _store: Store;
   @NgInject(Dav) private _dav: Dav;
-  @NgInject(MatBottomSheet) private _modal: MatBottomSheet;
   @NgInject(WebIntent) private _intent: WebIntent;
+  @NgInject(Router) private _router: Router;
   @NgInject(AndroidPermissions) private _perm: AndroidPermissions;
   @NgInject(Platform) private _platform: Platform;
   @NgInject(CallLog) private _callLog: CallLog;
 
   public numberDialed$: EventEmitter<NumberDialed> = new EventEmitter<NumberDialed>();
+  public selectNumber$: EventEmitter<Contact> = new EventEmitter<Contact>();
+  public numberSelected$: EventEmitter<string> = new EventEmitter<string>();
+  public contactSelected$: EventEmitter<Contact> = new EventEmitter<Contact>();
 
   public contactFromEvent(f: FilteringEvent): Contact {
     if (f.item instanceof Contact) {
@@ -37,6 +39,28 @@ export class Dialer extends BaseClass {
     return this._dav.contactById(item.uid);
   }
 
+  public async processClick(who: string | Contact, ev: MouseEvent, type: ClickAction) {
+    ev.stopPropagation();
+    ev.preventDefault();
+    if (!who) {
+      return ;
+    }
+    if (!type) {
+      type = await this._store.getAction();
+    }
+
+    if (type == 'call' && who) {
+      this.dial(who);
+    }
+    else if (['view', 'edit'].indexOf(type) != -1 && who && who instanceof Contact) {
+      const id = this._dav.contactId(who);
+      this._router.navigateByUrl(`details/${type == 'edit' ? 'edit/' : ''}${id}`);
+    }
+    else if (type == 'select' && who && who instanceof Contact) {
+      this.contactSelected$.emit(who);
+    }
+  }
+
   public async getNumber(c: Contact): Promise<string> {
     const numbers = this._dav.contactPhones(c);
     if (numbers.length == 0) {
@@ -45,9 +69,8 @@ export class Dialer extends BaseClass {
     if (numbers.length == 1) {
       return this._dav.contactPhones(c)[0];
     }
-    const ref = this._modal.open(NumberSelector, {data: c});
-    const result: string = await new Promise(resolve => ref.instance.notify.pipe(take(1)).subscribe(number => resolve(number)));
-    ref.dismiss();
+    this.selectNumber$.emit(c);
+    const result = await new Promise<string>(resolve => this.numberSelected$.pipe(take(1)).subscribe(n => resolve(n)));
     return result;
   }
 

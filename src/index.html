@@ -19,8 +19,17 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
   <style id="custom-style">
+    .fa.thin {
+      font-weight: 400 !important;
+    }
     .p-tabview > ul {
       justify-content: space-evenly;
+    }
+    .p-overlaypanel:after, .p-overlaypanel:before {
+      left: calc(var(--overlayArrowLeft, 0) + 0.8rem) !important;
+    }
+    .p-toolbar.p-component, ul.p-tabview-nav {
+      height: 3rem !important;
     }
     .p-tabview > ul > li {
       display: flex;

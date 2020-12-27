@@ -34,10 +34,8 @@ export class Dropdown extends BaseComponent {
 
   @NgCycle('change')
   protected _change(changes: SimpleChanges) {
-    console.log('changes are', changes);
     if (changes['model'] && this.model) {
       const option = this.options.find(o => this.isPrimitive ? o.value == this.model : o.value == (this.model as LabelValue).value);
-      console.log('option is', option);
       if (!option) {
         this.options.push(this.isPrimitive ? {value: this.model as string, label: this.model as string} : this.model as LabelValue);
       }
@@ -52,7 +50,6 @@ export class Dropdown extends BaseComponent {
   }
 
   protected _modelChange(x: LabelValue) {
-    console.log('model change', x);
     if (x == null) {
       this._model = null;
       this.modelChange.emit(null);

@@ -1,9 +1,9 @@
-import {Component, Inject, Output, EventEmitter} from '@angular/core';
-import {MAT_BOTTOM_SHEET_DATA} from '@angular/material/bottom-sheet';
+import {Component} from '@angular/core';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
-import {Contact} from '../models';
+import {Contact, LabelValue} from '../models';
 import {Dav} from '../services/dav';
+import {Dialer} from '../services/dialer';
 
 @Component({
   selector: 'dav-number-selector',
@@ -12,21 +12,26 @@ import {Dav} from '../services/dav';
 })
 export class NumberSelector extends BaseComponent {
   @NgInject(Dav) private _dav: Dav;
-  @Output() public notify: EventEmitter<string> = new EventEmitter<string>();
+  @NgInject(Dialer) private _dialer: Dialer;
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) private _contact: Contact) {
-    super();
-  }
-
-  protected _numbers: Array<string> = [];
+  protected _numbers: Array<LabelValue> = [];
   protected _selection: string = null;
+  protected _visible: boolean = false;
+  protected _model: string = null;
+  private _contact: Contact;
 
   @NgCycle('init')
   protected _initMe() {
-    this._numbers = this._dav.contactPhones(this._contact);
+    this.connect(this._dialer.selectNumber$, c => {
+      this._contact = c;
+      this._visible = true;
+      this._model = null;
+      this._numbers = this._dav.contactPhones(this._contact).map(n => <LabelValue>{label: n, value: n});
+    })
   }
 
   protected _select(number: string) {
-    this.notify.emit(number);
+    this._dialer.numberSelected$.emit(number);
+    this._visible = false;
   }
 }

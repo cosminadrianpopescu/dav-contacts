@@ -2,16 +2,13 @@
   width: 100%;
   display: flex;
   align-items: center;
+  height: 3.5rem;
 }
 
 .input {
   width: 100%;
   display: flex;
   flex: 1;
-
-  .icon {
-    font-size: 2rem;
-  }
 
   input {
     font-weight: bold;
@@ -21,13 +18,38 @@
   }
 }
 
+h3 {
+  margin-left: 1rem;
+}
+
 .dialpad {
   display: flex;
   flex: 1;
-  height: calc(100% - 3.5rem);
+  height: calc(40vh + 1rem);
+  background: var(--surface-c);
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+  width: 100%;
   flex-wrap: wrap;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}
+
+.dialpad[hidden], .input[hidden]{
+  display: none;
+}
+
+dav-history, dav-contacts-list {
+  width: 100%;
+}
+
+.keys {
+  display: flex;
+  height: calc(100% - 1rem);
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .key {
@@ -41,6 +63,19 @@
   font-family: var(--font-family);
 
   .row1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
   }
+
+  .row2 {
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }

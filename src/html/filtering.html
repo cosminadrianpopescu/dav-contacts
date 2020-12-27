@@ -1,16 +1,16 @@
 <div class="p-component">
-  <ag-virtual-scroll height="calc(100vh - 52px)" #vs [items]="view._items">
+  <ag-virtual-scroll height="calc(100vh - 6.5rem)" #vs [items]="view._items">
     <div class="flex p-shadow-1 padding" *ngFor="let item of vs.items">
-      <p-overlayPanel #menu>
+      <p-overlayPanel #menu appendTo="body">
         <ng-template pTemplate>
           <div class="flex flex--column">
-            <dav-button label="Edit before call" (notify)="view._notify('edit', item)"></dav-button>
-            <dav-button [hidden]="!item.showSave" label="Create new contact" (notify)="view._notify('save', item)"></dav-button>
-            <dav-button [hidden]="!item.showSave" label="Add to existing contact" (notify)="view._notify('save', item)"></dav-button>
+            <dav-button label="Edit before call" (notify)="view._notify('edit', item, menu)"></dav-button>
+            <dav-button [hidden]="!item.showSave" label="Create new contact" (notify)="view._notify('save', item, menu)"></dav-button>
+            <dav-button [hidden]="!item.showSave" label="Add to existing contact" (notify)="view._notify('add-to-contact', item, menu)"></dav-button>
           </div>
         </ng-template>
       </p-overlayPanel>
-      <dav-button icon="fa fa-phone" dav-contact-click="call" [who]="item | filteringCallableItem" (notify)="view._notify('call', item)"></dav-button>
+      <dav-button icon="fa fa-phone" dav-contact-click="call" [who]="item | filteringCallableItem" (notify)="view._notify('call', item, menu)"></dav-button>
       <div class="text">
         <div class="line1" dav-contact-click [who]="item | filteringCallableItem">{{item.line1}}</div>
         <div class="line2" dav-contact-click [who]="item | filteringCallableItem" [innerHTML]="item.line2"></div>

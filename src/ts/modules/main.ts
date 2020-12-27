@@ -38,7 +38,6 @@ import {Toolbar} from '../components/toolbar';
 import {CallLog2History} from '../convertors/call-log-to-history';
 import {ContactClick} from '../directives/contact-click';
 import {LongPress} from '../directives/long-press';
-import {Dialer} from '../pages/dialer';
 import {Home} from '../pages/home';
 import {Main as MainComponent} from '../pages/main';
 import {Tiles} from '../pages/tiles';
@@ -89,6 +88,7 @@ import {DialogModule} from 'primeng/dialog';
 import {CheckboxModule} from 'primeng/checkbox';
 import {InputSwitchModule} from 'primeng/inputswitch';
 import {AgVirtualScrollModule} from 'ag-virtual-scroll';
+import {SelectContact} from '../pages/select-contact';
 
 Dropdown.prototype.getOptionValue = function(option: any) {
   return option;
@@ -98,7 +98,7 @@ Dropdown.prototype.getOptionValue = function(option: any) {
   declarations: [
     MainComponent, Home, Toolbar, pipes.RouteData, SideMenu, Contact,
     pipes.ContactName, pipes.ContactPhone, pipes.FilteredContacts, pipes.ContactPhoto,
-    Dialer, Loading, Dialpad, pipes.AsHtml, LongPress, HistoryPage,
+    Loading, Dialpad, pipes.AsHtml, LongPress, HistoryPage,
     ContactsList, NumberSelector, ContactClick, pipes.FilteringCallableItem,
     pipes.ContactsForTag, pipes.IsFavorite, Avatar, Tiles, pipes.ContactInitials,
     pipes.ContactColor, pipes.HighlightedName, pipes.ContactTags, Groups,
@@ -107,9 +107,9 @@ Dropdown.prototype.getOptionValue = function(option: any) {
     Settings, CheckboxGroup, pipes.IsChecked, Swipe, pipes.FieldTitle, pipes.HasAdd,
     pipes.AsOptions, pipes.ToValueLabel, pipes.IsCollapsed,
 
-    Button, TextInput, Panel, DropdownWidget,
+    Button, TextInput, Panel, DropdownWidget, SelectContact,
   ],
-  entryComponents: [Home, SideMenu, NumberSelector,],
+  entryComponents: [Home, SideMenu, ],
   imports: [
     MatSelectModule, MatFormFieldModule, FormsModule, MatInputModule,
     BrowserModule, IonicModule.forRoot(), 

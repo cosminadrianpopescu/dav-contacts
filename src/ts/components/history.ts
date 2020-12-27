@@ -1,10 +1,10 @@
 import {DatePipe} from '@angular/common';
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {OverlayPanel} from 'primeng/overlaypanel';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
-import {FilteringItem, FilteringEvent, FilteringEventType, ModelFactory, CallLogType} from '../models';
+import {CallLogType, FilteringEvent, FilteringEventType, FilteringItem, ModelFactory} from '../models';
 import {History as HistoryService} from '../services/history';
-import {OverlayPanel} from 'primeng/overlaypanel';
 
 @Component({
   selector: 'dav-history',
@@ -14,8 +14,6 @@ import {OverlayPanel} from 'primeng/overlaypanel';
 export class History extends BaseComponent {
   @NgInject(HistoryService) private _service: HistoryService;
   @Output() public notify: EventEmitter<FilteringEvent> = new EventEmitter<FilteringEvent>();
-
-  @ViewChild('menu') private _menu: OverlayPanel;
 
   protected _items: Array<FilteringItem> = [];
 
@@ -32,8 +30,8 @@ export class History extends BaseComponent {
     })
   }
 
-  protected _notify(type: FilteringEventType, item: FilteringItem) {
-    this._menu.hide();
+  protected _notify(type: FilteringEventType, item: FilteringItem, menu: OverlayPanel) {
+    menu.hide();
     this.notify.emit(ModelFactory.instance(<FilteringEvent>{type: type, item: item.original}, FilteringEvent) as FilteringEvent);
   }
 }

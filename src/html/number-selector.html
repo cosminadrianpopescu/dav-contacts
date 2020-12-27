@@ -1,4 +1,11 @@
-<label id="pick-label">Pick a number:</label>
-<mat-label-group aria-labeled-by="pick-label" class="group">
-  <mat-radio-button (click)="view._select(number)" class="button" *ngFor="let number of view._numbers" [value]="number">{{number}}</mat-radio-button>
-</mat-label-group>
+<p-sidebar [(visible)]="view._visible" position="bottom" [showCloseIcon]="false">
+  <div class="content">
+    <dav-dropdown
+      [vertical]="true"
+      [options]="view._numbers"
+      [isPrimitive]="true"
+      [asRadio]="true"
+      (modelChange)="view._select($event)"
+      [model]="view._model"></dav-dropdown>
+  </div>
+</p-sidebar>

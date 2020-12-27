@@ -99,9 +99,9 @@ export class FilteringResult {
   match: string;
 }
 
-export type FilteringEventType = 'save' | 'edit' | 'call';
+export type FilteringEventType = 'save' | 'edit' | 'call' | 'add-to-contact';
 
-export type ClickAction = 'call' | 'edit' | 'view';
+export type ClickAction = 'call' | 'edit' | 'view' | 'select';
 
 export type CallType = 'CALL' | 'DIAL';
 

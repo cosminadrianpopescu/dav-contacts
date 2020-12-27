@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {BaseComponent} from '../base';
 import {NgCycle, NgInject} from '../decorators';
-import {Contact, ModelFactory, ShownField} from '../models';
+import {Contact, ModelFactory, ShownField, TEL} from '../models';
 import {Dav} from '../services/dav';
 import {Navigation} from '../services/navigation';
 import {Store} from '../services/store';
@@ -26,7 +26,6 @@ export class Details extends BaseComponent {
   private async _setFields(ro: boolean) {
     this._readOnly = ro;
     this._fields = await this._store.getShownFields();
-    console.log('fields are', this._fields, this._readOnly);
     if (!this._readOnly) {
       return ;
     }
@@ -43,6 +42,15 @@ export class Details extends BaseComponent {
       if (this._router.url.match(/edit/)) {
         this._setFields(false);
       }
+    });
+
+    this.connect(this._nav.connectToRoute('new-number'), n => {
+      const m = this._contact.metadata.find(m => m.vcardId == TEL);
+      if (!m) {
+        return ;
+      }
+
+      m.values.push({type: null, value: n});
     });
 
     this.connect(this._nav.connectToRoute('number'), number => this._initContact(number));

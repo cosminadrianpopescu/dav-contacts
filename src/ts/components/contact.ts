@@ -16,6 +16,7 @@ export class Contact extends BaseComponent {
   @Input() public contact: Model;
   @Input() public inCard: boolean = true;
   @Input() public compact: boolean = false;
+  @Input() public isSelecting: boolean = false;
 
   @NgInject(Dav) private _dav: Dav;
   @NgInject(Dialer) private _dialer: Dialer;
@@ -39,7 +40,7 @@ export class Contact extends BaseComponent {
 
   protected _menuClick(ev: MouseEvent, menu: OverlayPanel) {
     menu.toggle(ev);
-    this._preventClick(ev);
+    // this._preventClick(ev);
   }
 
   protected async _fav(ev: MouseEvent) {

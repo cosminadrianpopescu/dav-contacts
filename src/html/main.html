@@ -2,10 +2,9 @@
   <p-sidebar [style]="{width: '80%'}" [(visible)]="view._sidebar" baseZIndex="10000" position="right">
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: '', icon: 'fa fa-home', label: 'Home'}}"></ng-container>
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'settings', icon: 'fa fa-cog', label: 'Settings'}}"></ng-container>
-      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'history', icon: 'fa fa-history', label: 'History and call log'}}"></ng-container>
-      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'dial', icon: 'fa fa-phone', label: 'Dialpad'}}"></ng-container>
+      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'dial', icon: 'fa fa-phone', label: 'Phone'}}"></ng-container>
       <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'details/new', icon: 'fa fa-user-plus', label: 'Add a new contact'}}"></ng-container>
-      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'sync', icon: 'fa fa-refresh', label: 'Synchronize contacts'}}"></ng-container>
+      <ng-container [ngTemplateOutlet]="nav" [ngTemplateOutletContext]="{$implicit: {link: 'sync', icon: 'fa fa-sync', label: 'Synchronize contacts'}}"></ng-container>
   </p-sidebar>
   <dav-toolbar (notify)="view._toolbar($event)"></dav-toolbar>
   <router-outlet></router-outlet>
@@ -18,3 +17,5 @@
 </ng-template>
 
 <p-toast key="abc" position="top-center"></p-toast>
+
+<dav-number-selector></dav-number-selector>

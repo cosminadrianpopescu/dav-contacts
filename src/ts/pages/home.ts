@@ -74,7 +74,6 @@ export class Home  extends BaseComponent {
   }
 
   protected _tab(ev: {index: number}) {
-    console.log('ev is', ev);
     const t = this._tabs.find(t => t.idx == ev.index);
     this._selectedTab = ev.index;
     t.init = true;

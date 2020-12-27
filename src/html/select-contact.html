@@ -1,0 +1,5 @@
+<div class="content">
+  <ag-virtual-scroll #vs [items]="view._book?.contacts | filteredContacts | async" height="calc(100vh - 5rem)">
+    <dav-contact [isSelecting]="true" *ngFor="let contact of vs.items" [contact]="contact"></dav-contact>
+  </ag-virtual-scroll>
+</div>

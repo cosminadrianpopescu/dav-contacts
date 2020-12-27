@@ -13,20 +13,20 @@
 
   <p-tabPanel pRipple *ngIf="view._tabs[1]?.idx >= 0">
     <ng-template pTemplate="header"><ng-container [ngTemplateOutlet]="headerTpl" [ngTemplateOutletContext]="{$implicit: {l: 'Contacts', c: 'fa fa-user'}}"></ng-container></ng-template>
-    <ag-virtual-scroll #vs [items]="view._book?.contacts | filteredContacts | async" height="calc(100vh - 140px)" *ngIf="view._tabs[1]?.init">
+    <ag-virtual-scroll #vs [items]="view._book?.contacts | filteredContacts | async" height="calc(100vh - 8rem)" *ngIf="view._tabs[1]?.init">
       <dav-contact *ngFor="let contact of vs.items" [contact]="contact"></dav-contact>
     </ag-virtual-scroll>
   </p-tabPanel>
 
   <p-tabPanel pRipple *ngIf="view._tabs[2]?.idx >= 0">
     <ng-template pTemplate="header"><ng-container [ngTemplateOutlet]="headerTpl" [ngTemplateOutletContext]="{$implicit: {l: 'Groups', c: 'fa fa-users'}}"></ng-container></ng-template>
-    <span *ngIf="view._tabs[2]?.init">
+    <div *ngIf="view._tabs[2]?.init" class="groups">
       <dav-panel #panel *ngFor="let tag of view._tags" [header]="tag">
         <span *ngIf="!(panel | isCollapsed | async)">
           <dav-contact [inCard]="false" *ngFor="let contact of (tag | contactsForTag:view._sync | filteredContacts | async)" [contact]="contact"></dav-contact>
         </span>
       </dav-panel>
-    </span>
+    </div>
   </p-tabPanel>
 </p-tabView>
 

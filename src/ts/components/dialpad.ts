@@ -1,5 +1,9 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {BaseComponent} from '../base';
+import {Contact, FilteringEvent, History as HistoryModel} from '../models';
+import {NgInject} from '../decorators';
+import {Dav} from '../services/dav';
+import {Dialer} from '../services/dialer';
 
 @Component({
   selector: 'dav-dialpad',
@@ -7,7 +11,6 @@ import {BaseComponent} from '../base';
   styleUrls: ['../../assets/scss/dialpad.scss'],
 })
 export class Dialpad extends BaseComponent {
-  @Output() public dial: EventEmitter<string> = new EventEmitter<string>();
   @Output() public numberChanged: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('input', {static: true}) private _input: ElementRef;
 
@@ -19,7 +22,12 @@ export class Dialpad extends BaseComponent {
     return this._text;
   }
 
+  @NgInject(Dav) private _dav: Dav;
+  @NgInject(Dialer) private _dialer: Dialer;
+
   private _text: String = '';
+  protected _forceText: boolean = false;
+  protected _showDialpad: boolean = false;
 
   protected _keys = [
     {no: 1, txt: '&nbsp;'},
@@ -75,6 +83,7 @@ export class Dialpad extends BaseComponent {
   }
 
   protected _key(s: string) {
+    this._forceText = false;
     if (s == null) {
       return;
     }
@@ -104,6 +113,53 @@ export class Dialpad extends BaseComponent {
   }
 
   protected _dial() {
-    this.dial.emit(this._text.toString());
+    if (!this._text) {
+      return;
+    }
+    this._dialer.dial(this._text.toString());
+  }
+
+  protected _toggle() {
+    this._showDialpad = !this._showDialpad;
+  }
+
+  private _edit(number: string, c: Contact) {
+    if (!c) {
+      this._text = number;
+      return ;
+    }
+    const numbers = this._dav.contactNumberByNumber(c, number);
+    const n = numbers.length >= 1 ? numbers[0] : null;
+    this._text = n || number;
+  }
+
+  protected _historyEv(ev: FilteringEvent) {
+    if (ev.type == 'save') {
+      this.navigate(`details/add/${(<HistoryModel>ev.item).number}`)
+      return ;
+    }
+    const contact = this._dialer.contactFromEvent(ev);
+    if (ev.type == 'edit') {
+      this._showDialpad = true;
+      setTimeout(() => this._edit((ev.item as HistoryModel).number, contact));
+      return ;
+    }
+
+    if (ev.type == 'add-to-contact') {
+      this.navigate(`select/${(<HistoryModel>ev.item).number}`);
+    }
+  }
+
+  protected async _contactsEv(ev: FilteringEvent) {
+    if (ev.type == 'edit') {
+      const c = ev.item as Contact;
+      const number = await this._dialer.getNumber(c);
+      this._edit(number, c);
+    }
+  }
+
+  protected _showText() {
+    this._forceText = true;
+    this._showDialpad = true;
   }
 }

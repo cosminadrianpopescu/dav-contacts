@@ -9,11 +9,14 @@ dav-dropdown {
 
     &--column {
       flex-direction: column;
+      .option {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 
   p-radioButton {
-    margin-right: 0.1rem;
+    margin-right: 0.5rem;
   }
   
   .option {

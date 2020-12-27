@@ -1,8 +1,8 @@
-<div class="p-fluid flex flex--margin">
+<div class="flex flex--margin">
   <dav-single-binary [readOnly]="view._readOnly" [contact]="view._contact" vcardId="PHOTO"></dav-single-binary>
   <div class="filler"></div>
   <dav-button styleClass="p-button-lg" dav-contact-click="call" [who]="view._contact" icon="fa fa-phone"></dav-button>
-  <dav-button [hidden]="!view._readOnly" styleClass="p-button-lg" icon="fa fa-pencil-square-o" (notify)="view._edit()"></dav-button>
+  <dav-button [hidden]="!view._readOnly" styleClass="p-button-lg" icon="fa fa-edit" (notify)="view._edit()"></dav-button>
   <dav-button [hidden]="view._readOnly" styleClass="p-button-lg" icon="fa fa-times" (notify)="view._cancel()"></dav-button>
   <dav-button [hidden]="view._readOnly" styleClass="p-button-lg" icon="fa fa-check" (notify)="view._save()"></dav-button>
   <dav-button [hidden]="!view._readOnly" styleClass="p-button-lg" icon="fa fa-trash" (notify)="view._delete()"></dav-button>

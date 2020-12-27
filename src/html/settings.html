@@ -4,7 +4,7 @@
   [collapsed]="view._serverSet$ | async">
   <div *ngIf="view._server" class="p-shadow-1 input-flex" [hidden]="(view._serverSet$ | async) && view._serverRo">
     <dav-input label="Server url" [(model)]="view._server.url"></dav-input>
-    <dav-button (notify)="view._addServer()" icon="fa fa-sign-in"></dav-button>
+    <dav-button (notify)="view._addServer()" icon="fa fa-sign-in-alt"></dav-button>
   </div>
   <div *ngIf="view._server" class="p-shadow-1 input-flex" [hidden]="!(view._serverSet$ | async) || !view._serverRo">
     <span class="full">{{view._server.url}}</span>
